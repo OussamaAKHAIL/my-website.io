@@ -1,0 +1,799 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>OUSSAMA AK-HAIL - Portfolio</title>
+  <style>
+    /* Dark mode variables */
+    :root {
+      --bg-primary: #001233;
+      --bg-secondary: #001845;
+      --text-primary: #ffffff;
+      --text-secondary: #b3d1ff;
+      --accent-color: #3b82f6;
+      --card-bg: rgba(255, 255, 255, 0.1);
+      --border-color: rgba(173, 216, 230, 0.3);
+    }
+
+    [data-theme="light"] {
+      --bg-primary: #f0f4f8;
+      --bg-secondary: #ffffff;
+      --text-primary: #1a202c;
+      --text-secondary: #2d3748;
+      --accent-color: #3182ce;
+      --card-bg: rgba(0, 0, 0, 0.05);
+      --border-color: rgba(0, 0, 0, 0.1);
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      scroll-behavior: smooth;
+      transition: background-color 0.3s, color 0.3s;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+      color: var(--text-primary);
+      min-height: 100vh;
+      overflow-x: hidden;
+      background: linear-gradient(to bottom, var(--bg-primary), var(--bg-secondary));
+      background-attachment: fixed;
+    }
+
+    /* Theme toggle button */
+    .theme-toggle {
+      position: fixed;
+      top: 1rem;
+      right: 1rem;
+      z-index: 200;
+      background-color: var(--accent-color);
+      color: white;
+      border: none;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      cursor: pointer;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    .theme-toggle:hover {
+      transform: scale(1.1);
+      box-shadow: 0 6px 8px rgba(0, 0, 0, 0.2);
+    }
+
+    /* Star Canvas */
+    #starCanvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -10;
+      background: linear-gradient(to bottom, var(--bg-primary), var(--bg-secondary));
+    }
+
+    /* Navigation */
+    .navbar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      background-color: rgba(0, 18, 51, 0.8);
+      backdrop-filter: blur(10px);
+      z-index: 100;
+      padding: 1rem 0;
+      border-bottom: 1px solid rgba(173, 216, 230, 0.2);
+    }
+
+    .nav-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 0 1rem;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 1.5rem;
+    }
+
+    .nav-link {
+      color: var(--text-secondary);
+      text-decoration: none;
+      font-size: 1rem;
+      font-weight: 500;
+      transition: color 0.2s;
+      padding: 0.5rem 0;
+      position: relative;
+    }
+
+    .nav-link:hover {
+      color: var(--text-primary);
+    }
+
+    .nav-link::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 0;
+      height: 2px;
+      background-color: var(--accent-color);
+      transition: width 0.3s;
+    }
+
+    .nav-link:hover::after {
+      width: 100%;
+    }
+
+    /* Hero section */
+    .hero {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      padding: 6rem 1rem 3rem;
+      text-align: center;
+    }
+
+    .profile-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin-bottom: 2rem;
+    }
+
+    @media (min-width: 768px) {
+      .profile-container {
+        flex-direction: row;
+        gap: 2rem;
+      }
+    }
+
+    .profile-image {
+      width: 200px;
+      height: 200px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 4px solid var(--accent-color);
+      box-shadow: 0 0 20px rgba(59, 130, 246, 0.5);
+      margin-bottom: 1.5rem;
+    }
+
+    @media (min-width: 768px) {
+      .profile-image {
+        margin-bottom: 0;
+      }
+    }
+
+    .profile-text {
+      text-align: center;
+    }
+
+    @media (min-width: 768px) {
+      .profile-text {
+        text-align: left;
+      }
+    }
+
+    .name {
+      font-size: 2.5rem;
+      font-weight: bold;
+      margin-bottom: 0.5rem;
+      background: linear-gradient(to right, var(--text-primary), var(--text-secondary));
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+
+    @media (min-width: 768px) {
+      .name {
+        font-size: 3rem;
+      }
+    }
+
+    .typing-text {
+      font-size: 1.5rem;
+      color: var(--text-secondary);
+      height: 2rem;
+      overflow: hidden;
+      white-space: nowrap;
+      border-right: 3px solid var(--accent-color);
+      animation: typing 4s steps(40) 1s infinite, blink-caret 0.75s step-end infinite;
+      margin-bottom: 0.5rem;
+    }
+
+    @keyframes typing {
+      0%, 100% { width: 0 }
+      50%, 90% { width: 24ch }
+    }
+
+    @keyframes blink-caret {
+      from, to { border-color: transparent }
+      50% { border-color: var(--accent-color) }
+    }
+
+    .intro-text {
+      font-size: 1rem;
+      color: var(--text-secondary);
+      max-width: 600px;
+      margin: 0.5rem 0;
+      line-height: 1.4;
+    }
+
+    .scroll-down {
+      position: absolute;
+      bottom: 2rem;
+      left: 50%;
+      transform: translateX(-50%);
+      animation: bounce 2s infinite;
+    }
+
+    @keyframes bounce {
+      0%, 20%, 50%, 80%, 100% { transform: translateY(0) translateX(-50%); }
+      40% { transform: translateY(-20px) translateX(-50%); }
+      60% { transform: translateY(-10px) translateX(-50%); }
+    }
+
+    .scroll-down svg {
+      width: 2rem;
+      height: 2rem;
+      color: var(--text-secondary);
+    }
+
+    /* Container */
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 5rem 1rem;
+    }
+
+    /* Section styles */
+    .section {
+      margin-bottom: 5rem;
+      scroll-margin-top: 5rem;
+    }
+
+    .section-title {
+      font-size: 2rem;
+      margin-bottom: 2rem;
+      color: var(--text-secondary);
+      border-bottom: 1px solid var(--border-color);
+      padding-bottom: 0.5rem;
+      display: inline-block;
+    }
+
+    /* Cards grid */
+    .cards-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 1.5rem;
+    }
+
+    @media (min-width: 640px) {
+      .cards-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (min-width: 1024px) {
+      .cards-grid {
+        grid-template-columns: repeat(3, 1fr);
+      }
+    }
+
+    /* Card */
+    .card {
+      border-radius: 0.5rem;
+      overflow: hidden;
+      background-color: var(--card-bg);
+      backdrop-filter: blur(8px);
+      border: 1px solid var(--border-color);
+      transition: transform 0.2s, box-shadow 0.2s;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+    }
+
+    .card-header {
+      padding: 1.25rem 1.25rem 0.75rem;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .card-title {
+      font-size: 1.25rem;
+      font-weight: bold;
+      margin-bottom: 0.5rem;
+      color: var(--text-primary);
+    }
+
+    .card-subtitle {
+      font-size: 1rem;
+      color: var(--text-secondary);
+      margin-bottom: 0.5rem;
+    }
+
+    .card-date {
+      font-size: 0.875rem;
+      color: var(--accent-color);
+    }
+
+    .card-content {
+      padding: 1rem 1.25rem;
+      flex-grow: 1;
+      color: var(--text-secondary);
+    }
+
+    .card-content ul {
+      list-style-position: inside;
+      margin-top: 0.5rem;
+    }
+
+    .card-content li {
+      margin-bottom: 0.5rem;
+    }
+
+    /* Skills grid */
+    .skills-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      padding: 1rem;
+      background-color: var(--card-bg);
+      backdrop-filter: blur(8px);
+      border: 1px solid var(--border-color);
+      border-radius: 0.5rem;
+    }
+
+    .skill-tag {
+      font-size: 0.875rem;
+      padding: 0.5rem 0.75rem;
+      border-radius: 0.25rem;
+      background-color: var(--accent-color);
+      color: var(--text-secondary);
+      transition: transform 0.2s, background-color 0.2s;
+    }
+
+    .skill-tag:hover {
+      transform: translateY(-2px);
+      opacity: 0.9;
+    }
+
+    /* Footer */
+    .footer {
+      text-align: center;
+      padding: 2rem 1rem;
+      background-color: rgba(0, 18, 51, 0.8);
+      backdrop-filter: blur(10px);
+      border-top: 1px solid var(--border-color);
+    }
+
+    .footer p {
+      color: var(--text-secondary);
+    }
+
+    .back-to-top {
+      position: fixed;
+      bottom: 2rem;
+      right: 2rem;
+      width: 3rem;
+      height: 3rem;
+      background-color: var(--accent-color);
+      color: white;
+      border-radius: 50%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      cursor: pointer;
+      opacity: 0;
+      transition: opacity 0.3s, transform 0.3s;
+      z-index: 90;
+    }
+
+    .back-to-top.visible {
+      opacity: 1;
+    }
+
+    .back-to-top:hover {
+      transform: translateY(-5px);
+    }
+  </style>
+</head>
+<body>
+  <!-- Theme Toggle Button -->
+  <button class="theme-toggle" id="themeToggle" aria-label="Toggle Theme">
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M12 3v1m0 16v1m9-9h-1M4 12H3m3.343-5.657L5.93 5.93m12.728 12.728 1.414 1.414M6.343 6.343 5.93 5.93m12.728 12.728-1.414 1.414"/>
+    </svg>
+  </button>
+
+  <!-- Star field canvas -->
+  <canvas id="starCanvas"></canvas>
+
+  <!-- Navigation -->
+  <nav class="navbar">
+    <div class="nav-container">
+      <div class="nav-links">
+        <a href="#home" class="nav-link">Home</a>
+        <a href="#education" class="nav-link">Education</a>
+        <a href="#experience" class="nav-link">Experience</a>
+        <a href="#projects" class="nav-link">Projects</a>
+        <a href="#skills" class="nav-link">Skills</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Hero Section -->
+  <section id="home" class="hero">
+    <div class="profile-container">
+      <img src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/image-ZmGuzR3wEiFvP8ZRY78ob0tJ5p0x08.png" alt="OUSSAMA AK-HAIL" class="profile-image">
+      <div class="profile-text">
+        <h1 class="name">OUSSAMA AK-HAIL</h1>
+        <div class="typing-text">Hey I'm an electrical engineer</div>
+        <p class="intro-text">Hello, my name is Oussama AK-HAIL. I hold a (DUT) in electrical engineering as a "technicien supérieur" and an (LP) in "Automatisme et gestion technique des bâtiments." Currently, I'm dedicated to furthering my education in electrical engineering and industrial management (GEMI) as an engineering student.</p>
+        <p class="intro-text">I'm curious, creative, eager to learn, enjoy working with others, and take my responsibilities seriously. I've gained valuable experiences to grow my communication, problem-solving, and expertise through attending forums, workshops, and conferences.</p>
+      </div>
+    </div>
+    <div class="scroll-down">
+      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M12 5v14M5 12l7 7 7-7"/>
+      </svg>
+    </div>
+  </section>
+
+  <div class="container">
+    <!-- Education Section -->
+    <section id="education" class="section">
+      <h2 class="section-title">Education</h2>
+      <div class="cards-grid">
+        <div class="card">
+          <div class="card-header">
+            <h3 class="card-title">Faculty of Science and Technology Tangier</h3>
+            <div class="card-subtitle">Engineering program in Electrical Engineering and Industrial Management</div>
+            <div class="card-date">Sep 2023 - Jul 2026</div>
+          </div>
+          <div class="card-content">
+            <p>Currently pursuing an engineering degree with focus on electrical engineering and industrial management.</p>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-header">
+            <h3 class="card-title">Ecole Supérieure de Technologie Agadir</h3>
+            <div class="card-subtitle">Licence Professionnelle in Automation and Building Management</div>
+            <div class="card-date">Oct 2022 - Jul 2023</div>
+          </div>
+          <div class="card-content">
+            <p>Skills developed:</p>
+            <ul>
+              <li>PLC programming (Siemens, Schneider, Allen Bradley)</li>
+              <li>VHDL, FPGA</li>
+              <li>Web development, databases</li>
+              <li>Networking software</li>
+              <li>Technical building management</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-header">
+            <h3 class="card-title">Ecole Supérieure de Technologie Agadir</h3>
+            <div class="card-subtitle">DUT in Electrical Engineering</div>
+            <div class="card-date">Sep 2020 - Jun 2022</div>
+          </div>
+          <div class="card-content">
+            <p>Skills developed:</p>
+            <ul>
+              <li>Modbus, IoT, GSM</li>
+              <li>Industrial supervision</li>
+              <li>Artificial Intelligence</li>
+              <li>GUI design</li>
+              <li>Automation, Augmented Reality</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Experience Section -->
+    <section id="experience" class="section">
+      <h2 class="section-title">Work Experience</h2>
+      <div class="cards-grid">
+        <div class="card">
+          <div class="card-header">
+            <h3 class="card-title">Technical Unit, RoboTech FSTT</h3>
+            <div class="card-subtitle">Part-time, Hybrid</div>
+            <div class="card-date">Oct 2023 - Present</div>
+          </div>
+          <div class="card-content">
+            <ul>
+              <li>Worked on technical projects related to robotics and automation.</li>
+              <li>Developed solutions involving embedded systems and electronics.</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-header">
+            <h3 class="card-title">Media Manager, RoboTech FSTT</h3>
+            <div class="card-date">Apr 2024 - Oct 2024</div>
+          </div>
+          <div class="card-content">
+            <ul>
+              <li>Created media content and tutorials to simplify complex technical concepts.</li>
+              <li>Managed digital communication and engagement strategies.</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-header">
+            <h3 class="card-title">Member, GreenLab Fablab Tanger</h3>
+            <div class="card-subtitle">Hybrid</div>
+            <div class="card-date">Oct 2023 - Present</div>
+          </div>
+          <div class="card-content">
+            <p>Participated in a collaborative maker space focusing on innovation and prototyping.</p>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-header">
+            <h3 class="card-title">Automatician, Les Huileries du Souss Belhassan - HSB</h3>
+            <div class="card-subtitle">Internship, On-site</div>
+            <div class="card-date">Apr 2023 - May 2023</div>
+          </div>
+          <div class="card-content">
+            <ul>
+              <li>Automated and supervised a reverse osmosis system.</li>
+              <li>Improved system performance through engineering solutions.</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-header">
+            <h3 class="card-title">Electronic Technician, AGRI 4.0</h3>
+            <div class="card-subtitle">Internship, Hybrid</div>
+            <div class="card-date">Apr 2022 - May 2022</div>
+          </div>
+          <div class="card-content">
+            <ul>
+              <li>Designed a GSM-based Smart Irrigation system.</li>
+              <li>Developed a Modbus RTU configuration and monitoring software.</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-header">
+            <h3 class="card-title">Maintenance Technician, SEWS Maroc</h3>
+            <div class="card-subtitle">Internship, On-site</div>
+            <div class="card-date">Aug 2021</div>
+          </div>
+          <div class="card-content">
+            <ul>
+              <li>Conducted maintenance on industrial equipment.</li>
+              <li>Gained hands-on experience in troubleshooting and repair.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Projects Section -->
+    <section id="projects" class="section">
+      <h2 class="section-title">Projects</h2>
+      <div class="cards-grid">
+        <div class="card">
+          <div class="card-header">
+            <h3 class="card-title">Remote Management System for Smart Irrigation</h3>
+            <div class="card-subtitle">AGRI 4.0</div>
+            <div class="card-date">Apr 2022 - Jun 2022</div>
+          </div>
+          <div class="card-content">
+            <ul>
+              <li>Developed a GSM-based smart irrigation system that enables remote and automated water management using the Modbus RTU protocol.</li>
+              <li>Reverse-engineered a data logger's Modbus registers using Modbus Poll and official software to extract sensor readings and send control signals.</li>
+              <li>Created a custom GUI in Python (Tkinter and PySerial) for easy system monitoring and configuration.</li>
+              <li>Programmed an Arduino to handle AT commands for SMS communication and implemented a CRC-based error detection system over RS485.</li>
+              <li>Integrated safety features, including water flow sensors and an SMS alert system to detect failures and notify users.</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-header">
+            <h3 class="card-title">AI and AR-Based Sorting Machine</h3>
+            <div class="card-subtitle">Ecole Supérieure de Technologie Agadir</div>
+            <div class="card-date">Nov 2021 - Apr 2022</div>
+          </div>
+          <div class="card-content">
+            <ul>
+              <li>Designed a sorting machine using artificial intelligence to classify fresh and rotten apples.</li>
+              <li>Integrated Augmented Reality (AR) for supervision, enabling users to monitor and interact with the system.</li>
+              <li>Used Modbus TCP/IP for real-time machine control and data transmission.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Skills Section -->
+    <section id="skills" class="section">
+      <h2 class="section-title">Technical Skills</h2>
+      <div class="skills-grid">
+        <span class="skill-tag">Modbus RTU</span>
+        <span class="skill-tag">Tkinter</span>
+        <span class="skill-tag">Computer-Aided Design (CAD)</span>
+        <span class="skill-tag">Onshape</span>
+        <span class="skill-tag">Schneider Unity Pro</span>
+        <span class="skill-tag">Schneider SoMachine</span>
+        <span class="skill-tag">Allen Bradley RSLogix 5000</span>
+        <span class="skill-tag">PLC Allen Bradley</span>
+        <span class="skill-tag">PLC Schneider</span>
+        <span class="skill-tag">Siemens TIA Portal</span>
+        <span class="skill-tag">Siemens S7-1200 PLC & HMI</span>
+        <span class="skill-tag">VHDL</span>
+        <span class="skill-tag">Field-Programmable Gate Arrays (FPGA)</span>
+        <span class="skill-tag">Networking Software</span>
+        <span class="skill-tag">Web Development</span>
+        <span class="skill-tag">Databases</span>
+        <span class="skill-tag">Technical Building Management</span>
+        <span class="skill-tag">Automation</span>
+        <span class="skill-tag">Industrial Supervision</span>
+        <span class="skill-tag">PLC Siemens</span>
+        <span class="skill-tag">HMI Programming</span>
+        <span class="skill-tag">Electronics</span>
+        <span class="skill-tag">Modbus</span>
+        <span class="skill-tag">Graphical User Interface (GUI)</span>
+        <span class="skill-tag">Global System for Mobile Communications (GSM)</span>
+        <span class="skill-tag">MQTT</span>
+        <span class="skill-tag">Citect</span>
+        <span class="skill-tag">Python (Programming Language)</span>
+        <span class="skill-tag">Internet of Things (IoT)</span>
+        <span class="skill-tag">Artificial Intelligence (AI)</span>
+        <span class="skill-tag">Augmented Reality (AR)</span>
+        <span class="skill-tag">Electrical Engineering</span>
+      </div>
+    </section>
+  </div>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <p>© 2024 OUSSAMA AK-HAIL | Electrical Engineer</p>
+  </footer>
+
+  <!-- Back to top button -->
+  <div class="back-to-top" id="backToTop">
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M12 19V5M5 12l7-7 7 7"/>
+    </svg>
+  </div>
+
+  <script>
+    // Theme Toggle Functionality
+    function initThemeToggle() {
+      const themeToggle = document.getElementById('themeToggle');
+      const savedTheme = localStorage.getItem('theme') || 'dark';
+      
+      function setTheme(theme) {
+        document.documentElement.setAttribute('data-theme', theme);
+        localStorage.setItem('theme', theme);
+        
+        // Update star animation background if needed
+        if (window.initStarField) {
+          window.initStarField();
+        }
+      }
+
+      // Initial theme setup
+      setTheme(savedTheme);
+
+      themeToggle.addEventListener('click', () => {
+        const currentTheme = document.documentElement.getAttribute('data-theme');
+        const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+        setTheme(newTheme);
+      });
+    }
+
+    // Star Field Animation
+    function initStarField() {
+      const canvas = document.getElementById('starCanvas');
+      const ctx = canvas.getContext('2d');
+      
+      function resizeCanvas() {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+      }
+      
+      resizeCanvas();
+      window.addEventListener('resize', resizeCanvas);
+      
+      const stars = [];
+      const starCount = 300;
+      const maxDepth = 1000;
+      
+      for (let i = 0; i < starCount; i++) {
+        stars.push({
+          x: Math.random() * 2000 - 1000,
+          y: Math.random() * 2000 - 1000,
+          z: Math.random() * maxDepth,
+          size: 1 + Math.random() * 1.5,
+          color: `rgba(255, 255, 255, ${0.3 + Math.random() * 0.7})`,
+          speed: 0.5 + Math.random() * 1.5
+        });
+      }
+      
+      function animate() {
+        const theme = document.documentElement.getAttribute('data-theme');
+        const bgColor = theme === 'dark' 
+          ? "rgba(0, 20, 60, 0.2)" 
+          : "rgba(240, 244, 248, 0.1)";
+        
+        ctx.fillStyle = bgColor;
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        
+        const centerX = canvas.width / 2;
+        const centerY = canvas.height / 2;
+        
+        for (let i = 0; i < starCount; i++) {
+          const star = stars[i];
+          
+          star.z -= star.speed;
+          
+          if (star.z <= 0) {
+            star.z = maxDepth;
+            star.x = Math.random() * 2000 - 1000;
+            star.y = Math.random() * 2000 - 1000;
+          }
+          
+          const factor = 200 / star.z;
+          const x = centerX + star.x * factor;
+          const y = centerY + star.y * factor;
+          
+          if (x >= 0 && x <= canvas.width && y >= 0 && y <= canvas.height) {
+            const size = star.size * (1 - star.z / maxDepth);
+            ctx.fillStyle = star.color;
+            ctx.beginPath();
+            ctx.arc(x, y, size, 0, Math.PI * 2);
+            ctx.fill();
+          }
+        }
+        
+        requestAnimationFrame(animate);
+      }
+      
+      animate();
+    }
+
+    // Back to Top Button
+    function initBackToTop() {
+      const backToTopButton = document.getElementById('backToTop');
+      
+      window.addEventListener('scroll', () => {
+        if (window.scrollY > 300) {
+          backToTopButton.classList.add('visible');
+        } else {
+          backToTopButton.classList.remove('visible');
+        }
+      });
+      
+      backToTopButton.addEventListener('click', () => {
+        window.scrollTo({
+          top: 0,
