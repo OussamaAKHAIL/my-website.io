@@ -1,0 +1,1514 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>OUSSAMA AK-HAIL - Portfolio</title>
+  <style>
+    /* Reset and base styles */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      scroll-behavior: smooth;
+    }
+
+    :root {
+      /* Light mode colors */
+      --bg-primary: #f8f9fa;
+      --bg-secondary: #ffffff;
+      --text-primary: #333333;
+      --text-secondary: #555555;
+      --accent-primary: #3b82f6;
+      --accent-secondary: #60a5fa;
+      --border-color: rgba(0, 0, 0, 0.1);
+      --card-bg: rgba(255, 255, 255, 0.8);
+      --card-border: rgba(0, 0, 0, 0.1);
+      --nav-bg: rgba(255, 255, 255, 0.8);
+      --footer-bg: rgba(248, 249, 250, 0.9);
+      --toggle-bg: #f0f0f0;
+      --toggle-track: #333333;
+      --error-color: #dc2626;
+      --success-color: #10b981;
+      
+      /* Navigation menu item colors */
+      --nav-home-color: #ff00ff;      /* Magenta */
+      --nav-education-color: #00ffff; /* Cyan */
+      --nav-experience-color: #ffff00; /* Yellow */
+      --nav-projects-color: #00ff00;  /* Green */
+      --nav-skills-color: #ff9900;    /* Orange */
+      --nav-contact-color: #ff3366;   /* Pink */
+    }
+
+    .dark {
+      /* Dark mode colors */
+      --bg-primary: #000000;
+      --bg-secondary: #121212;
+      --text-primary: #ffffff;
+      --text-secondary: #cccccc;
+      --accent-primary: #ff00ff;
+      --accent-secondary: #00ffff;
+      --border-color: rgba(255, 255, 255, 0.1);
+      --card-bg: rgba(30, 30, 30, 0.6);
+      --card-border: rgba(100, 100, 100, 0.3);
+      --nav-bg: rgba(0, 0, 0, 0.8);
+      --footer-bg: rgba(0, 0, 0, 0.8);
+      --toggle-bg: #333333;
+      --toggle-track: #ffffff;
+      --error-color: #ef4444;
+      --success-color: #34d399;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+      color: var(--text-primary);
+      min-height: 100vh;
+      overflow-x: hidden;
+      background-color: var(--bg-primary);
+      transition: background-color 0.3s, color 0.3s;
+    }
+
+    /* Canvas for star animation */
+    #starCanvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -10;
+      background: linear-gradient(to bottom, var(--bg-primary), var(--bg-secondary));
+      transition: background 0.3s;
+    }
+
+    /* Floating components */
+    .floating-component {
+      position: fixed;
+      z-index: -5;
+      opacity: 0.4;
+      pointer-events: none;
+      transition: opacity 0.3s;
+    }
+
+    .dark .floating-component {
+      opacity: 0.6;
+    }
+
+    /* Theme toggle and top navigation */
+    .top-bar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      background-color: var(--nav-bg);
+      backdrop-filter: blur(10px);
+      z-index: 110;
+      padding: 0.75rem 0;
+      border-bottom: 1px solid var(--border-color);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .theme-toggle-container {
+      display: flex;
+      align-items: center;
+      margin-left: auto;
+      margin-right: 1.5rem;
+      gap: 0.5rem;
+    }
+
+    .theme-toggle {
+      position: relative;
+      width: 60px;
+      height: 30px;
+      border-radius: 15px;
+      background-color: var(--toggle-bg);
+      border: 1px solid var(--border-color);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      padding: 0 5px;
+      justify-content: space-between;
+      transition: all 0.3s;
+    }
+
+    .theme-toggle-track {
+      position: absolute;
+      top: 3px;
+      left: 3px;
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      background-color: var(--toggle-track);
+      transition: transform 0.3s, background-color 0.3s;
+      box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+    }
+
+    .dark .theme-toggle-track {
+      transform: translateX(30px);
+    }
+
+    .theme-icon {
+      color: var(--text-secondary);
+      font-size: 14px;
+      z-index: 1;
+      transition: color 0.3s;
+    }
+
+    /* Navigation */
+    .navbar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      background-color: var(--nav-bg);
+      backdrop-filter: blur(10px);
+      z-index: 100;
+      padding: 0.75rem 0;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .nav-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0 1rem;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 1.5rem;
+    }
+
+    .nav-link {
+      color: var(--text-secondary);
+      text-decoration: none;
+      font-size: 1rem;
+      font-weight: 500;
+      transition: all 0.3s;
+      padding: 0.5rem 0;
+      position: relative;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .nav-link svg {
+      width: 20px;
+      height: 20px;
+    }
+
+    /* Individual nav link hover colors */
+    .nav-link[href="#home"]:hover {
+      color: var(--text-primary);
+      text-shadow: 0 0 10px var(--nav-home-color), 0 0 20px var(--nav-home-color);
+    }
+
+    .nav-link[href="#education"]:hover {
+      color: var(--text-primary);
+      text-shadow: 0 0 10px var(--nav-education-color), 0 0 20px var(--nav-education-color);
+    }
+
+    .nav-link[href="#experience"]:hover {
+      color: var(--text-primary);
+      text-shadow: 0 0 10px var(--nav-experience-color), 0 0 20px var(--nav-experience-color);
+    }
+
+    .nav-link[href="#projects"]:hover {
+      color: var(--text-primary);
+      text-shadow: 0 0 10px var(--nav-projects-color), 0 0 20px var(--nav-projects-color);
+    }
+
+    .nav-link[href="#skills"]:hover {
+      color: var(--text-primary);
+      text-shadow: 0 0 10px var(--nav-skills-color), 0 0 20px var(--nav-skills-color);
+    }
+
+    .nav-link[href="#contact"]:hover {
+      color: var(--text-primary);
+      text-shadow: 0 0 10px var(--nav-contact-color), 0 0 20px var(--nav-contact-color);
+    }
+
+    .nav-link::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 0;
+      height: 2px;
+      transition: width 0.3s;
+    }
+
+    .nav-link[href="#home"]::after {
+      background-color: var(--nav-home-color);
+    }
+
+    .nav-link[href="#education"]::after {
+      background-color: var(--nav-education-color);
+    }
+
+    .nav-link[href="#experience"]::after {
+      background-color: var(--nav-experience-color);
+    }
+
+    .nav-link[href="#projects"]::after {
+      background-color: var(--nav-projects-color);
+    }
+
+    .nav-link[href="#skills"]::after {
+      background-color: var(--nav-skills-color);
+    }
+
+    .nav-link[href="#contact"]::after {
+      background-color: var(--nav-contact-color);
+    }
+
+    .nav-link:hover::after {
+      width: 100%;
+    }
+
+    /* Hero section */
+    .hero {
+      min-height: 90vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      padding: 7rem 1rem 2rem;
+      text-align: center;
+    }
+
+    .profile-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin-bottom: 1.5rem;
+    }
+
+    @media (min-width: 768px) {
+      .profile-container {
+        flex-direction: row;
+        gap: 2rem;
+        align-items: flex-start;
+      }
+    }
+
+    .profile-image-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .profile-image {
+      width: 180px;
+      height: 180px;
+      border-radius: 50%;
+      object-fit: cover;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+      transition: all 0.3s ease;
+    }
+
+    .profile-image:hover {
+      transform: scale(1.05);
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.5);
+    }
+
+    .profile-links {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+      width: 100%;
+    }
+
+    .profile-link {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      text-decoration: none;
+      color: var(--text-secondary);
+      font-size: 0.9rem;
+      padding: 0.5rem 1rem;
+      border-radius: 2rem;
+      background-color: var(--card-bg);
+      border: 1px solid var(--border-color);
+      transition: all 0.3s;
+    }
+
+    .linkedin-link:hover {
+      color: #0077b5;
+      background-color: var(--bg-secondary);
+      transform: translateY(-3px);
+      box-shadow: 0 5px 15px rgba(0, 119, 181, 0.3);
+    }
+
+    .cv-link:hover {
+      color: #ff5722;
+      background-color: var(--bg-secondary);
+      transform: translateY(-3px);
+      box-shadow: 0 5px 15px rgba(255, 87, 34, 0.3);
+    }
+
+    .linkedin-icon {
+      color: #0077b5;
+    }
+
+    .cv-icon {
+      color: #ff5722;
+    }
+
+    @media (min-width: 768px) {
+      .profile-image {
+        margin-bottom: 0;
+      }
+    }
+
+    .profile-text {
+      text-align: center;
+      max-width: 600px;
+    }
+
+    @media (min-width: 768px) {
+      .profile-text {
+        text-align: left;
+      }
+    }
+
+    .name {
+      font-size: 2.5rem;
+      font-weight: bold;
+      margin-bottom: 0.5rem;
+      background: linear-gradient(to right, var(--text-primary), var(--text-secondary));
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      transition: all 0.3s;
+    }
+
+    @media (min-width: 768px) {
+      .name {
+        font-size: 3rem;
+      }
+    }
+
+    .typing-text {
+      font-size: 1.5rem;
+      color: var(--text-secondary);
+      height: 2rem;
+      overflow: hidden;
+      white-space: nowrap;
+      border-right: 3px solid var(--accent-primary);
+      animation: typing 4s steps(40) 1s infinite, blink-caret 0.75s step-end infinite;
+      margin-bottom: 1rem;
+      transition: all 0.3s;
+    }
+
+    @keyframes typing {
+      0%, 100% { width: 0 }
+      50%, 90% { width: 24ch }
+    }
+
+    @keyframes blink-caret {
+      from, to { border-color: transparent }
+      50% { border-color: var(--accent-primary) }
+    }
+
+    .intro-text {
+      font-size: 0.95rem;
+      line-height: 1.6;
+      color: var(--text-secondary);
+      text-align: justify;
+      margin-top: 1rem;
+      transition: color 0.3s;
+    }
+
+    .intro-text:hover {
+      color: var(--text-primary);
+    }
+
+    .scroll-down {
+      position: absolute;
+      bottom: 1.5rem;
+      left: 50%;
+      transform: translateX(-50%);
+      animation: bounce 2s infinite;
+      transition: all 0.3s;
+    }
+
+    .scroll-down:hover {
+      filter: drop-shadow(0 0 10px var(--accent-secondary)) drop-shadow(0 0 20px var(--accent-secondary));
+    }
+
+    @keyframes bounce {
+      0%, 20%, 50%, 80%, 100% { transform: translateY(0) translateX(-50%); }
+      40% { transform: translateY(-20px) translateX(-50%); }
+      60% { transform: translateY(-10px) translateX(-50%); }
+    }
+
+    .scroll-down svg {
+      width: 2rem;
+      height: 2rem;
+      color: var(--text-secondary);
+    }
+
+    /* Container */
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 3rem 1rem;
+    }
+
+    /* Section styles */
+    .section {
+      margin-bottom: 3.5rem;
+      scroll-margin-top: 7rem;
+    }
+
+    .section-title {
+      font-size: 2rem;
+      margin-bottom: 1.5rem;
+      color: var(--text-secondary);
+      border-bottom: 1px solid var(--border-color);
+      padding-bottom: 0.5rem;
+      display: inline-block;
+      transition: all 0.3s;
+    }
+
+    .section-title:hover {
+      color: var(--text-primary);
+      border-bottom-color: var(--accent-primary);
+    }
+
+    /* Cards grid */
+    .cards-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 1.5rem;
+    }
+
+    @media (min-width: 640px) {
+      .cards-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (min-width: 1024px) {
+      .cards-grid {
+        grid-template-columns: repeat(3, 1fr);
+      }
+    }
+
+    /* Card */
+    .card {
+      border-radius: 0.5rem;
+      overflow: hidden;
+      background-color: var(--card-bg);
+      backdrop-filter: blur(8px);
+      border: 1px solid var(--card-border);
+      transition: all 0.3s;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 0 20px var(--accent-secondary), 0 0 40px rgba(0, 255, 0, 0.2);
+      border-color: var(--accent-secondary);
+      background-color: var(--card-bg);
+    }
+
+    .card-header {
+      padding: 1.25rem 1.25rem 0.75rem;
+      border-bottom: 1px solid var(--border-color);
+      transition: all 0.3s;
+    }
+
+    .card:hover .card-header {
+      border-bottom-color: var(--accent-secondary);
+    }
+
+    .card-title {
+      font-size: 1.25rem;
+      font-weight: bold;
+      margin-bottom: 0.5rem;
+      color: var(--text-primary);
+      transition: all 0.3s;
+    }
+
+    .card:hover .card-title {
+      color: var(--accent-secondary);
+    }
+
+    .card-subtitle {
+      font-size: 1rem;
+      color: var(--text-secondary);
+      margin-bottom: 0.5rem;
+      transition: all 0.3s;
+    }
+
+    .card:hover .card-subtitle {
+      color: var(--text-primary);
+    }
+
+    .card-date {
+      font-size: 0.875rem;
+      color: var(--text-secondary);
+      transition: all 0.3s;
+    }
+
+    .card:hover .card-date {
+      color: var(--text-primary);
+    }
+
+    .card-content {
+      padding: 1rem 1.25rem;
+      flex-grow: 1;
+      color: var(--text-secondary);
+      transition: all 0.3s;
+    }
+
+    .card:hover .card-content {
+      color: var(--text-primary);
+    }
+
+    .card-content ul {
+      list-style-position: inside;
+      margin-top: 0.5rem;
+    }
+
+    .card-content li {
+      margin-bottom: 0.5rem;
+      transition: all 0.3s;
+    }
+
+    .card:hover .card-content li {
+      color: var(--text-primary);
+    }
+
+    /* Skills grid */
+    .skills-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      padding: 1rem;
+      background-color: var(--card-bg);
+      backdrop-filter: blur(8px);
+      border: 1px solid var(--card-border);
+      border-radius: 0.5rem;
+      transition: all 0.3s;
+    }
+
+    .skills-grid:hover {
+      box-shadow: 0 0 20px rgba(255, 153, 0, 0.3);
+      border-color: rgba(255, 153, 0, 0.3);
+    }
+
+    .skill-tag {
+      font-size: 0.875rem;
+      padding: 0.5rem 0.75rem;
+      border-radius: 0.25rem;
+      background-color: var(--bg-secondary);
+      color: var(--text-secondary);
+      transition: all 0.3s;
+    }
+
+    .skill-tag:hover {
+      transform: translateY(-5px) scale(1.05);
+      background-color: var(--accent-primary);
+      color: var(--bg-primary);
+      box-shadow: 0 0 15px var(--accent-primary), 0 0 30px rgba(255, 0, 0, 0.3);
+    }
+
+    /* Contact form */
+    .contact-form {
+      background-color: var(--card-bg);
+      backdrop-filter: blur(8px);
+      border: 1px solid var(--card-border);
+      border-radius: 0.5rem;
+      padding: 2rem;
+      max-width: 600px;
+      margin: 0 auto;
+      transition: all 0.3s;
+    }
+
+    .contact-form:hover {
+      box-shadow: 0 0 20px var(--nav-contact-color), 0 0 40px rgba(255, 51, 102, 0.2);
+      border-color: var(--nav-contact-color);
+    }
+
+    .form-group {
+      margin-bottom: 1.5rem;
+    }
+
+    .form-label {
+      display: block;
+      margin-bottom: 0.5rem;
+      color: var(--text-secondary);
+      font-weight: 500;
+      transition: color 0.3s;
+    }
+
+    .form-control {
+      width: 100%;
+      padding: 0.75rem;
+      border-radius: 0.25rem;
+      border: 1px solid var(--border-color);
+      background-color: var(--bg-secondary);
+      color: var(--text-primary);
+      font-family: inherit;
+      transition: all 0.3s;
+    }
+
+    .form-control:focus {
+      outline: none;
+      border-color: var(--accent-primary);
+      box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.25);
+    }
+
+    .form-control::placeholder {
+      color: var(--text-secondary);
+      opacity: 0.7;
+    }
+
+    textarea.form-control {
+      min-height: 150px;
+      resize: vertical;
+    }
+
+    .submit-btn {
+      display: inline-block;
+      padding: 0.75rem 1.5rem;
+      background-color: var(--accent-primary);
+      color: var(--bg-primary);
+      border: none;
+      border-radius: 0.25rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+
+    .submit-btn:hover {
+      background-color: var(--accent-secondary);
+      transform: translateY(-3px);
+      box-shadow: 0 5px 15px rgba(59, 130, 246, 0.4);
+    }
+
+    .error-message {
+      color: var(--error-color);
+      font-size: 0.875rem;
+      margin-top: 0.5rem;
+      display: none;
+    }
+
+    .success-message {
+      color: var(--success-color);
+      font-size: 0.875rem;
+      margin-top: 0.5rem;
+      display: none;
+      text-align: center;
+      padding: 0.75rem;
+      background-color: rgba(16, 185, 129, 0.1);
+      border-radius: 0.25rem;
+    }
+
+    /* Footer */
+    .footer {
+      text-align: center;
+      padding: 1.5rem 1rem;
+      background-color: var(--footer-bg);
+      backdrop-filter: blur(10px);
+      border-top: 1px solid var(--border-color);
+    }
+
+    .footer p {
+      color: var(--text-secondary);
+      transition: all 0.3s;
+    }
+
+    .footer p:hover {
+      color: var(--text-primary);
+    }
+
+    .back-to-top {
+      position: fixed;
+      bottom: 2rem;
+      right: 2rem;
+      width: 3rem;
+      height: 3rem;
+      background-color: var(--bg-secondary);
+      color: var(--text-primary);
+      border-radius: 50%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      cursor: pointer;
+      opacity: 0;
+      transition: all 0.3s;
+      z-index: 90;
+    }
+
+    .back-to-top.visible {
+      opacity: 1;
+    }
+
+    .back-to-top:hover {
+      transform: translateY(-5px);
+      background-color: var(--accent-primary);
+      color: var(--bg-primary);
+      box-shadow: 0 0 15px var(--accent-primary), 0 0 30px var(--accent-primary);
+    }
+  </style>
+</head>
+<body>
+  <!-- Star field canvas -->
+  <canvas id="starCanvas"></canvas>
+
+  <!-- Floating electronic components -->
+  <div id="floatingComponents"></div>
+
+  <!-- Navigation -->
+  <nav class="navbar">
+    <div class="nav-container">
+      <div class="nav-links">
+        <a href="#home" class="nav-link">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+            <polyline points="9 22 9 12 15 12 15 22"></polyline>
+          </svg>
+          Home
+        </a>
+        <a href="#education" class="nav-link">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M22 10v6M2 10l10-5 10 5-10 5z"></path>
+            <path d="M6 12v5c0 2 2 3 6 3s6-1 6-3v-5"></path>
+          </svg>
+          Education
+        </a>
+        <a href="#experience" class="nav-link">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect>
+            <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path>
+          </svg>
+          Experience
+        </a>
+        <a href="#projects" class="nav-link">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="10"></circle>
+            <circle cx="12" cy="12" r="4"></circle>
+            <line x1="4.93" y1="4.93" x2="9.17" y2="9.17"></line>
+            <line x1="14.83" y1="14.83" x2="19.07" y2="19.07"></line>
+            <line x1="14.83" y1="9.17" x2="19.07" y2="4.93"></line>
+            <line x1="4.93" y1="19.07" x2="9.17" y2="14.83"></line>
+          </svg>
+          Projects
+        </a>
+        <a href="#skills" class="nav-link">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M20.24 12.24a6 6 0 0 0-8.49-8.49L5 10.5V19h8.5z"></path>
+            <line x1="16" y1="8" x2="2" y2="22"></line>
+            <line x1="17.5" y1="15" x2="9" y2="15"></line>
+          </svg>
+          Skills
+        </a>
+        <a href="#contact" class="nav-link">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+            <polyline points="22,6 12,13 2,6"></polyline>
+          </svg>
+          Contact
+        </a>
+      </div>
+      <div class="theme-toggle-container">
+        <span class="theme-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="5"></circle>
+            <line x1="12" y1="1" x2="12" y2="3"></line>
+            <line x1="12" y1="21" x2="12" y2="23"></line>
+            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+            <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+            <line x1="1" y1="12" x2="3" y2="12"></line>
+            <line x1="21" y1="12" x2="23" y2="12"></line>
+            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+            <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+          </svg>
+        </span>
+        <div class="theme-toggle" id="themeToggle">
+          <div class="theme-toggle-track"></div>
+        </div>
+        <span class="theme-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+          </svg>
+        </span>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Hero Section -->
+  <section id="home" class="hero">
+    <div class="profile-container">
+      <div class="profile-image-container">
+        <img src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/image-ZmGuzR3wEiFvP8ZRY78ob0tJ5p0x08.png" alt="OUSSAMA AK-HAIL" class="profile-image">
+        <div class="profile-links">
+          <a href="https://www.linkedin.com/in/oussama-ak-hail-973ab7235/" target="_blank" class="profile-link linkedin-link">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="currentColor" class="linkedin-icon">
+              <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path>
+              <rect x="2" y="9" width="4" height="12"></rect>
+              <circle cx="4" cy="4" r="2"></circle>
+            </svg>
+            Visit my LinkedIn
+          </a>
+          <a href="C:\\Users\\akous\\OneDrive\\Desktop\\website\\Oussama AK-HAIL CV.pdf" download class="profile-link cv-link">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="cv-icon">
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+              <polyline points="14 2 14 8 20 8"></polyline>
+              <line x1="16" y1="13" x2="8" y2="13"></line>
+              <line x1="16" y1="17" x2="8" y2="17"></line>
+              <polyline points="10 9 9 9 8 9"></polyline>
+            </svg>
+            Read my CV
+          </a>
+        </div>
+      </div>
+      <div class="profile-text">
+        <h1 class="name">OUSSAMA AK-HAIL</h1>
+        <div class="typing-text">Hey I'm an electrical engineer</div>
+        <p class="intro-text">
+          Hello, my name is Oussama AK-HAIL. I hold a (DUT) in electrical engineering as a "technicien supérieur" and an (LP) in "Automatisme et gestion technique des bâtiments". Currently, I'm dedicated to furthering my education in electrical engineering and industrial management (GEMI) as an engineering student.
+          <br><br>
+          I'm curious, creative, eager to learn, enjoy working with others, and take my responsibilities seriously. I've gained valuable experiences to grow my communication, problem-solving, and expertise through attending forums, workshops, and conferences.
+        </p>
+      </div>
+    </div>
+    <div class="scroll-down">
+      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M12 5v14M5 12l7 7 7-7"/>
+      </svg>
+    </div>
+  </section>
+
+  <div class="container">
+    <!-- Education Section -->
+    <section id="education" class="section">
+      <h2 class="section-title">Education</h2>
+      <div class="cards-grid">
+        <div class="card">
+          <div class="card-header">
+            <h3 class="card-title">Faculty of Science and Technology Tangier</h3>
+            <div class="card-subtitle">Engineering program in Electrical Engineering and Industrial Management</div>
+            <div class="card-date">Sep 2023 - Jul 2026</div>
+          </div>
+          <div class="card-content">
+            <p>Currently pursuing an engineering degree with focus on electrical engineering and industrial management.</p>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-header">
+            <h3 class="card-title">Ecole Supérieure de Technologie Agadir</h3>
+            <div class="card-subtitle">Licence Professionnelle in Automation and Building Management</div>
+            <div class="card-date">Oct 2022 - Jul 2023</div>
+          </div>
+          <div class="card-content">
+            <p>Skills developed:</p>
+            <ul>
+              <li>PLC programming (Siemens, Schneider, Allen Bradley)</li>
+              <li>VHDL, FPGA</li>
+              <li>Web development, databases</li>
+              <li>Networking software</li>
+              <li>Technical building management</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-header">
+            <h3 class="card-title">Ecole Supérieure de Technologie Agadir</h3>
+            <div class="card-subtitle">DUT in Electrical Engineering</div>
+            <div class="card-date">Sep 2020 - Jun 2022</div>
+          </div>
+          <div class="card-content">
+            <p>Skills developed:</p>
+            <ul>
+              <li>Modbus, IoT, GSM</li>
+              <li>Industrial supervision</li>
+              <li>Artificial Intelligence</li>
+              <li>GUI design</li>
+              <li>Automation, Augmented Reality</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Experience Section -->
+    <section id="experience" class="section">
+      <h2 class="section-title">Work Experience</h2>
+      <div class="cards-grid">
+        <div class="card">
+          <div class="card-header">
+            <h3 class="card-title">Technical Unit, RoboTech FSTT</h3>
+            <div class="card-subtitle">Part-time, Hybrid</div>
+            <div class="card-date">Oct 2023 - Present</div>
+          </div>
+          <div class="card-content">
+            <ul>
+              <li>Worked on technical projects related to robotics and automation.</li>
+              <li>Developed solutions involving embedded systems and electronics.</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-header">
+            <h3 class="card-title">Media Manager, RoboTech FSTT</h3>
+            <div class="card-date">Apr 2024 - Oct 2024</div>
+          </div>
+          <div class="card-content">
+            <ul>
+              <li>Created media content and tutorials to simplify complex technical concepts.</li>
+              <li>Managed digital communication and engagement strategies.</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-header">
+            <h3 class="card-title">Member, GreenLab Fablab Tanger</h3>
+            <div class="card-subtitle">Hybrid</div>
+            <div class="card-date">Oct 2023 - Present</div>
+          </div>
+          <div class="card-content">
+            <p>Participated in a collaborative maker space focusing on innovation and prototyping.</p>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-header">
+            <h3 class="card-title">Automatician, Les Huileries du Souss Belhassan - HSB</h3>
+            <div class="card-subtitle">Internship, On-site</div>
+            <div class="card-date">Apr 2023 - May 2023</div>
+          </div>
+          <div class="card-content">
+            <ul>
+              <li>Automated and supervised a reverse osmosis system.</li>
+              <li>Improved system performance through engineering solutions.</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-header">
+            <h3 class="card-title">Electronic Technician, AGRI 4.0</h3>
+            <div class="card-subtitle">Internship, Hybrid</div>
+            <div class="card-date">Apr 2022 - May 2022</div>
+          </div>
+          <div class="card-content">
+            <ul>
+              <li>Designed a GSM-based Smart Irrigation system.</li>
+              <li>Developed a Modbus RTU configuration and monitoring software.</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-header">
+            <h3 class="card-title">Maintenance Technician, SEWS Maroc</h3>
+            <div class="card-subtitle">Internship, On-site</div>
+            <div class="card-date">Aug 2021</div>
+          </div>
+          <div class="card-content">
+            <ul>
+              <li>Conducted maintenance on industrial equipment.</li>
+              <li>Gained hands-on experience in troubleshooting and repair.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Projects Section -->
+    <section id="projects" class="section">
+      <h2 class="section-title">Projects</h2>
+      <div class="cards-grid">
+        <div class="card">
+          <div class="card-header">
+            <h3 class="card-title">Remote Management System for Smart Irrigation</h3>
+            <div class="card-subtitle">AGRI 4.0</div>
+            <div class="card-date">Apr 2022 - Jun 2022</div>
+          </div>
+          <div class="card-content">
+            <ul>
+              <li>Developed a GSM-based smart irrigation system that enables remote and automated water management using the Modbus RTU protocol.</li>
+              <li>Reverse-engineered a data logger's Modbus registers using Modbus Poll and official software to extract sensor readings and send control signals.</li>
+              <li>Created a custom GUI in Python (Tkinter and PySerial) for easy system monitoring and configuration.</li>
+              <li>Programmed an Arduino to handle AT commands for SMS communication and implemented a CRC-based error detection system over RS485.</li>
+              <li>Integrated safety features, including water flow sensors and an SMS alert system to detect failures and notify users.</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-header">
+            <h3 class="card-title">AI and AR-Based Sorting Machine</h3>
+            <div class="card-subtitle">Ecole Supérieure de Technologie Agadir</div>
+            <div class="card-date">Nov 2021 - Apr 2022</div>
+          </div>
+          <div class="card-content">
+            <ul>
+              <li>Designed a sorting machine using artificial intelligence to classify fresh and rotten apples.</li>
+              <li>Integrated Augmented Reality (AR) for supervision, enabling users to monitor and interact with the system.</li>
+              <li>Used Modbus TCP/IP for real-time machine control and data transmission.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Skills Section -->
+    <section id="skills" class="section">
+      <h2 class="section-title">Technical Skills</h2>
+      <div class="skills-grid">
+        <span class="skill-tag">Modbus RTU</span>
+        <span class="skill-tag">Tkinter</span>
+        <span class="skill-tag">Computer-Aided Design (CAD)</span>
+        <span class="skill-tag">Onshape</span>
+        <span class="skill-tag">Schneider Unity Pro</span>
+        <span class="skill-tag">Schneider SoMachine</span>
+        <span class="skill-tag">Allen Bradley RSLogix 5000</span>
+        <span class="skill-tag">PLC Allen Bradley</span>
+        <span class="skill-tag">PLC Schneider</span>
+        <span class="skill-tag">Siemens TIA Portal</span>
+        <span class="skill-tag">Siemens S7-1200 PLC & HMI</span>
+        <span class="skill-tag">VHDL</span>
+        <span class="skill-tag">Field-Programmable Gate Arrays (FPGA)</span>
+        <span class="skill-tag">Networking Software</span>
+        <span class="skill-tag">Web Development</span>
+        <span class="skill-tag">Databases</span>
+        <span class="skill-tag">Technical Building Management</span>
+        <span class="skill-tag">Automation</span>
+        <span class="skill-tag">Industrial Supervision</span>
+        <span class="skill-tag">PLC Siemens</span>
+        <span class="skill-tag">HMI Programming</span>
+        <span class="skill-tag">Electronics</span>
+        <span class="skill-tag">Modbus</span>
+        <span class="skill-tag">Graphical User Interface (GUI)</span>
+        <span class="skill-tag">Global System for Mobile Communications (GSM)</span>
+        <span class="skill-tag">MQTT</span>
+        <span class="skill-tag">Citect</span>
+        <span class="skill-tag">Python (Programming Language)</span>
+        <span class="skill-tag">Internet of Things (IoT)</span>
+        <span class="skill-tag">Artificial Intelligence (AI)</span>
+        <span class="skill-tag">Augmented Reality (AR)</span>
+        <span class="skill-tag">Electrical Engineering</span>
+      </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="section">
+      <h2 class="section-title">Contact Me</h2>
+      <div class="contact-form">
+        <form id="contactForm">
+          <div class="form-group">
+            <label for="name" class="form-label">Name</label>
+            <input type="text" id="name" name="name" class="form-control" placeholder="Your name" required>
+            <div class="error-message" id="nameError">Please enter your name</div>
+          </div>
+          <div class="form-group">
+            <label for="email" class="form-label">Email</label>
+            <input type="email" id="email" name="email" class="form-control" placeholder="Your email address" required>
+            <div class="error-message" id="emailError">Please enter a valid email address</div>
+          </div>
+          <div class="form-group">
+            <label for="message" class="form-label">Message</label>
+            <textarea id="message" name="message" class="form-control" placeholder="Your message" required></textarea>
+            <div class="error-message" id="messageError">Please enter your message</div>
+          </div>
+          <button type="submit" class="submit-btn">Send Message</button>
+          <div class="success-message" id="successMessage">Your message has been sent successfully! I'll get back to you soon.</div>
+        </form>
+      </div>
+    </section>
+  </div>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <p>© 2024 OUSSAMA AK-HAIL | Electrical Engineer | Email: ak.oussama1604@gmail.com | Phone: 0609907353</p>
+  </footer>
+
+  <!-- Back to top button -->
+  <div class="back-to-top" id="backToTop">
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M12 19V5M5 12l7-7 7 7"/>
+    </svg>
+  </div>
+
+  <script>
+    // Electronic component images
+    const componentImages = [
+      {
+        src: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/image-iFZ1lsh4gUL6AQEnVQuzDjO0rOOqiv.png", // Arduino/blue board
+        width: 120,
+        height: 90
+      },
+      {
+        src: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/image-2ApdMxwqoPxxMv71VZ2UnyGrV6p0LK.png", // Raspberry Pi
+        width: 100,
+        height: 100
+      },
+      {
+        src: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/image-7k7xvTCIR1VDsBvIX3WXdrnXF6UuAx.png", // Resistor
+        width: 40,
+        height: 120
+      },
+      {
+        src: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/image-zr3Lkw8iwjGm4EwTlthoqvDoLkLAgE.png", // Spring/coil
+        width: 120,
+        height: 40
+      },
+      {
+        src: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/image-MpUhBXrAOAQBo3bIHMEs0pDD7Wb1dt.png", // Motherboard/circuit
+        width: 110,
+        height: 110
+      }
+    ];
+
+    // Create floating components
+    function createFloatingComponents() {
+      const container = document.getElementById('floatingComponents');
+      
+      // Create fewer instances of each component (reduced from 15 to 7)
+      for (let i = 0; i < 7; i++) {
+        const randomComponent = componentImages[Math.floor(Math.random() * componentImages.length)];
+        const img = document.createElement('img');
+        
+        img.src = randomComponent.src;
+        img.width = randomComponent.width;
+        img.height = randomComponent.height;
+        img.className = 'floating-component';
+        img.alt = "Electronic component";
+        
+        // Random initial position
+        const randomX = Math.random() * window.innerWidth;
+        const randomY = Math.random() * window.innerHeight;
+        
+        // Random movement direction and speed
+        const speedX = (Math.random() - 0.5) * 0.5;
+        const speedY = (Math.random() - 0.5) * 0.5;
+        const rotationSpeed = (Math.random() - 0.5) * 1;
+        
+        // Set initial position and rotation
+        img.style.left = `${randomX}px`;
+        img.style.top = `${randomY}px`;
+        img.style.transform = `rotate(${Math.random() * 360}deg)`;
+        
+        // Store movement data with the element
+        img.dataset.speedX = speedX;
+        img.dataset.speedY = speedY;
+        img.dataset.rotation = Math.random() * 360;
+        img.dataset.rotationSpeed = rotationSpeed;
+        
+        container.appendChild(img);
+      }
+    }
+
+    // Animate floating components
+    function animateFloatingComponents() {
+      const components = document.querySelectorAll('.floating-component');
+      
+      components.forEach(component => {
+        // Get current position
+        let x = parseFloat(component.style.left);
+        let y = parseFloat(component.style.top);
+        let rotation = parseFloat(component.dataset.rotation);
+        
+        // Update position
+        x += parseFloat(component.dataset.speedX);
+        y += parseFloat(component.dataset.speedY);
+        rotation += parseFloat(component.dataset.rotationSpeed);
+        
+        // Boundary check with wrap-around
+        if (x < -component.width) x = window.innerWidth;
+        if (x > window.innerWidth) x = -component.width;
+        if (y < -component.height) y = window.innerHeight;
+        if (y > window.innerHeight) y = -component.height;
+        
+        // Update element
+        component.style.left = `${x}px`;
+        component.style.top = `${y}px`;
+        component.style.transform = `rotate(${rotation}deg)`;
+        component.dataset.rotation = rotation;
+      });
+      
+      requestAnimationFrame(animateFloatingComponents);
+    }
+
+    // Theme toggle functionality
+    function initThemeToggle() {
+      const themeToggle = document.getElementById('themeToggle');
+      const htmlElement = document.documentElement;
+      
+      // Check for saved theme preference or use system preference
+      const savedTheme = localStorage.getItem('theme');
+      if (savedTheme) {
+        htmlElement.classList.toggle('dark', savedTheme === 'dark');
+      } else {
+        // Use system preference
+        const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        htmlElement.classList.toggle('dark', prefersDark);
+      }
+      
+      // Toggle theme on click
+      themeToggle.addEventListener('click', () => {
+        htmlElement.classList.toggle('dark');
+        const currentTheme = htmlElement.classList.contains('dark') ? 'dark' : 'light';
+        localStorage.setItem('theme', currentTheme);
+        updateStarField(currentTheme);
+      });
+    }
+
+    // Initialize star field animation
+    function initStarField() {
+      const canvas = document.getElementById('starCanvas');
+      const ctx = canvas.getContext('2d');
+      
+      // Set canvas to full screen
+      function resizeCanvas() {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+      }
+      
+      resizeCanvas();
+      window.addEventListener('resize', resizeCanvas);
+      
+      // Create stars with different colors
+      const stars = [];
+      const starCount = 300;
+      const maxDepth = 1000;
+      
+      // Star colors for dark mode
+      const darkModeStarColors = [
+        'rgba(255, 255, 255, 0.8)',  // White
+        'rgba(255, 0, 255, 0.8)',    // Magenta
+        'rgba(125, 255, 255, 0.8)',    // Cyan
+       // 'rgba(0, 255, 0, 0.8)',      // Green
+        ////'rgba(255, 0, 0, 0.8)',      // Red
+        //'rgba(255, 165, 0, 0.8)'     // Orange
+      ];
+      
+      // Star colors for light mode
+      const lightModeStarColors = [
+        'rgba(0, 0, 0, 0.8)',        // Black
+        'rgba(128, 0, 128, 0.8)',    // Purple
+        'rgba(0, 128, 128, 0.8)',    // Teal
+        'rgba(0, 100, 0, 0.8)',      // Dark Green
+        'rgba(128, 0, 0, 0.8)',      // Maroon
+        'rgba(128, 64, 0, 0.8)'      // Brown
+      ];
+      
+      // Initialize stars
+      function initStars(isDark) {
+        stars.length = 0;
+        const colors = isDark ? darkModeStarColors : lightModeStarColors;
+        
+        for (let i = 0; i < starCount; i++) {
+          stars.push({
+            x: Math.random() * 2000 - 1000,
+            y: Math.random() * 2000 - 1000,
+            z: Math.random() * maxDepth,
+            size: 1 + Math.random() * 1.5,
+            color: colors[Math.floor(Math.random() * colors.length)]
+          });
+        }
+      }
+      
+      // Initialize stars based on current theme
+      const isDarkMode = document.documentElement.classList.contains('dark');
+      initStars(isDarkMode);
+      
+      // Animation
+      function animate() {
+        const isDark = document.documentElement.classList.contains('dark');
+        ctx.fillStyle = isDark ? "rgba(0, 0, 0, 0.2)" : "rgba(248, 249, 250, 0.2)";
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        
+        const centerX = canvas.width / 2;
+        const centerY = canvas.height / 2;
+        
+        // Update and draw stars
+        for (let i = 0; i < starCount; i++) {
+          const star = stars[i];
+          
+          // Move star outward from center
+          star.z -= 1;
+          
+          // Reset star if it goes out of bounds
+          if (star.z <= 0) {
+            star.z = maxDepth;
+            star.x = Math.random() * 2000 - 1000;
+            star.y = Math.random() * 2000 - 1000;
+          }
+          
+          // Calculate star position based on perspective
+          const factor = 200 / star.z;
+          const x = centerX + star.x * factor;
+          const y = centerY + star.y * factor;
+          
+          // Draw star if it's within canvas bounds
+          if (x >= 0 && x <= canvas.width && y >= 0 && y <= canvas.height) {
+            const size = star.size * (1 - star.z / maxDepth);
+            ctx.fillStyle = star.color;
+            ctx.beginPath();
+            ctx.arc(x, y, size, 0, Math.PI * 2);
+            ctx.fill();
+          }
+        }
+        
+        requestAnimationFrame(animate);
+      }
+      
+      animate();
+      
+      // Function to update star colors when theme changes
+      window.updateStarField = function(theme) {
+        initStars(theme === 'dark');
+      };
+    }
+
+    // Back to top button
+    function initBackToTop() {
+      const backToTopButton = document.getElementById('backToTop');
+      
+      window.addEventListener('scroll', () => {
+        if (window.scrollY > 300) {
+          backToTopButton.classList.add('visible');
+        } else {
+          backToTopButton.classList.remove('visible');
+        }
+      });
+      
+      backToTopButton.addEventListener('click', () => {
+        window.scrollTo({
+          top: 0,
+          behavior: 'smooth'
+        });
+      });
+    }
+
+    // Highlight active nav link based on scroll position
+    function initScrollSpy() {
+      const sections = document.querySelectorAll('.section');
+      const navLinks = document.querySelectorAll('.nav-link');
+      
+      window.addEventListener('scroll', () => {
+        let current = '';
+        
+        sections.forEach(section => {
+          const sectionTop = section.offsetTop;
+          const sectionHeight = section.clientHeight;
+          
+          if (window.scrollY >= sectionTop - 300) {
+            current = section.getAttribute('id');
+          }
+        });
+        
+        navLinks.forEach(link => {
+          link.classList.remove('active');
+          if (link.getAttribute('href').substring(1) === current) {
+            link.classList.add('active');
+          }
+        });
+      });
+    }
+
+    // Handle window resize for floating components
+    function handleResize() {
+      const components = document.querySelectorAll('.floating-component');
+      const windowWidth = window.innerWidth;
+      const windowHeight = window.innerHeight;
+      
+      components.forEach(component => {
+        // Keep components within the new window boundaries
+        let x = parseFloat(component.style.left);
+        let y = parseFloat(component.style.top);
+        
+        if (x > windowWidth) component.style.left = `${windowWidth - component.width}px`;
+        if (y > windowHeight) component.style.top = `${windowHeight - component.height}px`;
+      });
+    }
+
+    // Form validation
+    function initContactForm() {
+      const contactForm = document.getElementById('contactForm');
+      const nameInput = document.getElementById('name');
+      const emailInput = document.getElementById('email');
+      const messageInput = document.getElementById('message');
+      const nameError = document.getElementById('nameError');
+      const emailError = document.getElementById('emailError');
+      const messageError = document.getElementById('messageError');
+      const successMessage = document.getElementById('successMessage');
+      
+      // Email validation regex
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      
+      contactForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        // Reset error messages
+        nameError.style.display = 'none';
+        emailError.style.display = 'none';
+        messageError.style.display = 'none';
+        successMessage.style.display = 'none';
+        
+        let isValid = true;
+        
+        // Validate name
+        if (nameInput.value.trim() === '') {
+          nameError.style.display = 'block';
+          isValid = false;
+        }
+        
+        // Validate email
+        if (!emailRegex.test(emailInput.value)) {
+          emailError.style.display = 'block';
+          isValid = false;
+        }
+        
+        // Validate message
+        if (messageInput.value.trim() === '') {
+          messageError.style.display = 'block';
+          isValid = false;
+        }
+        
+        // If form is valid, show success message
+        if (isValid) {
+          // In a real application, you would send the form data to a server here
+          successMessage.style.display = 'block';
+          contactForm.reset();
+          
+          // Hide success message after 5 seconds
+          setTimeout(() => {
+            successMessage.style.display = 'none';
+          }, 5000);
+        }
+      });
+    }
+
+    // Initialize everything when the page loads
+    document.addEventListener('DOMContentLoaded', () => {
+      initThemeToggle();
+      initStarField();
+      initBackToTop();
+      initScrollSpy();
+      createFloatingComponents();
+      animateFloatingComponents();
+      initContactForm();
+      
+      window.addEventListener('resize', handleResize);
+    });
+  </script>
+</body>
+</html>
