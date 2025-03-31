@@ -444,6 +444,7 @@
   }
 
   .typing-text {
+    font-family: 'Courier New', monospace;
     font-size: 1.5rem;
     color: var(--text-secondary);
     height: 2rem;
@@ -453,17 +454,34 @@
     animation: typing 4s steps(40) 1s infinite, blink-caret 0.75s step-end infinite;
     margin-bottom: 1rem;
     transition: all 0.3s;
+    position: relative;
+    font-weight: bold; /* Added boldness */
+    letter-spacing: 1px;
   }
 
   @keyframes typing {
     0%, 100% { width: 0 }
-    50%, 90% { width: 24ch }
+    50%, 90% { width: 32ch }
+  }
+  
+ @keyframes blink-caret {
+    from, to { border-color: transparent }
+    50% { border-color:  var(--accent-primary); }
   }
 
-  @keyframes blink-caret {
-    from, to { border-color: transparent }
-    50% { border-color: var(--accent-primary) }
-  }
+  /* Glow animation */
+@keyframes glow {
+    0%, 100% { 
+        text-shadow: 0 0 10px rgba(59, 130, 246, 0.3),
+                     0 0 20px rgba(59, 130, 246, 0.2);
+    }
+    50% {
+        text-shadow: 0 0 20px rgba(59, 130, 246, 0.5),
+                     0 0 40px rgba(59, 130, 246, 0.3);
+    }
+}
+
+ 
 
   .intro-text {
     font-size: 0.95rem;
@@ -1320,7 +1338,7 @@
   position: absolute;
   width: 100%;
   height: 100%;
-  background: rgba(255, 165, 0, 0.3);
+  background: rgba(0, 255, 4, 0.57);
   animation: flash 0.1s linear;
 }
 
@@ -1400,9 +1418,50 @@
   100% { transform: translate(0, 0); }
 }
 
+.normal-floating {
+    filter: drop-shadow(0 0 15px rgba(255, 162, 0, 0.5));
+    transition: filter 0.3s ease;
+}
 
+.dark .normal-floating {
+    filter: drop-shadow(0 0 20px rgba(0, 255, 255, 0.344));
+}
 
+  /* Add this to your existing CSS */
+  .glove-special {
+    filter: drop-shadow(0 0 10px rgba(255, 170, 0, 0.7));
+    transition: all 0.5s ease;
+    animation: float 4s ease-in-out infinite;
+  }
 
+  @keyframes float {
+    0%, 100% { transform: translateY(0) rotate(0deg); }
+    50% { transform: translateY(-15px) rotate(5deg); }
+  }
+
+  .dark .glove-special {
+    filter: drop-shadow(0 0 15px rgba(255, 255, 255, 0.344));
+  }
+
+   /* Add this to your existing CSS
+   .normal-flouting {
+    filter: drop-shadow(0 0 10px rgba(255, 170, 0, 0.7));
+    transition: all 0.5s ease;
+    animation: float 4s ease-in-out infinite;
+  }
+
+  @keyframes float {
+    0%, 100% { transform: translateY(0) rotate(0deg); }
+    50% { transform: translateY(-15px) rotate(5deg); }
+  }
+
+  .dark .normal-flouting {
+    filter: drop-shadow(0 0 15px rgba(4, 0, 255, 0.166));
+  } */
+  
+    
+
+  
 
 </style>
 
@@ -1532,7 +1591,7 @@
     </div>
     <div class="profile-text">
       <h1 class="name">OUSSAMA AK-HAIL</h1>
-      <div class="typing-text">Hey I'm an electrical engineer</div>
+      <div class="typing-text">Hey I'm an electrical engineer! </div>
       <p class="intro-text">
         Hello, my name is Oussama AK-HAIL. I hold a (DUT) in electrical engineering as a "technicien supérieur" and an (LP) in "Automatisme et gestion technique des bâtiments". Currently, I'm dedicated to furthering my education in electrical engineering and industrial management (GEMI) as an engineering student.
         <br><br>
@@ -1963,44 +2022,132 @@
     emailjs.init("bnq6VTyL43ZGNb5Bs"); // Replace with your EmailJS public key
   })();
 
-  // Electronic component images
-  const componentImages = [
-    {
-      src: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/image-iFZ1lsh4gUL6AQEnVQuzDjO0rOOqiv.png", // Arduino/blue board
-      width: 120,
-      height: 90
-    },
-    {
-      src: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/image-2ApdMxwqoPxxMv71VZ2UnyGrV6p0LK.png", // Raspberry Pi
-      width: 100,
-      height: 100
-    },
-    {
+  const specialComponents = [
+  {
       src: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/image-7k7xvTCIR1VDsBvIX3WXdrnXF6UuAx.png", // Resistor
-      width: 40,
-      height: 120
+      width: 60,
+      height: 20,
+       class: 'normal-floating'
+    },
+   
+
+  {
+      src:"https://hebbkx1anhila5yf.public.blob.vercel-storage.com/image-removebg-preview%20%282%29-6IejiMoENsw8nCxw8ummSWDeIJ3NPz.png", //disk
+      width: 55,
+      height: 55,
+       class: 'normal-floating'
     },
     {
-      src: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/image-zr3Lkw8iwjGm4EwTlthoqvDoLkLAgE.png", // Spring/coil
-      width: 120,
-      height: 40
+      src: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/image-removebg-preview%20%283%29%20%281%29-4ZGwuavTZAc6z9Z6Gb22MwSllOWl2M.png", // pizza
+      width: 80,
+      height: 80,
+       class: 'normal-floating'
     },
+
     {
+      src:"https://hebbkx1anhila5yf.public.blob.vercel-storage.com/image-UgwK25EAOClOHsTDKMR7YltP66Xz1s.png",     //screw   
+      width: 80,
+      height: 36,
+       class: 'normal-floating'
+    },
+
+    {
+    src: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/image-SdaJeaKobIfA0INVlpm9qWHQ1v1JGo.png",//glasses
+    width: 100,
+    height: 100,
+    class: 'glove-special'
+  },
+
+  {
+      src: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/image-2ApdMxwqoPxxMv71VZ2UnyGrV6p0LK.png", // Raspberry Pi
+      width: 95,
+      height: 95,
+       class: 'normal-floating'
+    },
+
+    {
+      src: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/image-bVPnyrUOLq4Suv28ok3AvdqeJhiDHx.png", // Arduino/blue board
+      width: 80,
+      height: 80,
+      
+      //class: 'normal-floating' 
+    },
+    
+
+    {
+    src: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/image-removebg-preview%20%284%29-ioUveaiu9zutE3474jvTsCkdU0I0eO.png",//duck
+    width: 100,
+    height: 56,
+    class: 'glove-special'
+  },
+
+  {
       src: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/image-MpUhBXrAOAQBo3bIHMEs0pDD7Wb1dt.png", // Motherboard/circuit
       width: 110,
-      height: 110
-    }
+      height: 110,
+       class: 'normal-floating'
+    },
+
+  {
+    src: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/image-kAjN722F3XyCnloNgQLdY4bS6cOsG8.png",//glove
+    width: 120,
+    height: 120,
+    class: 'glove-special'
+  },
+  
+  
+  
+                    
+  // Add future components here as new objects
+
+  {
+    
+    src: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/image-hly7J5OfcKguXPRpLDWSYRCowCJPNA.png",//telescope
+    width: 447,
+    height: 557,
+    class: 'glove-special'
+  },
+  
+  {
+      src:"https://hebbkx1anhila5yf.public.blob.vercel-storage.com/image-W7Y5E4DlTeVXRkdgmDLxHfJKFS7gDr.png", //motor
+                   
+      width: 90,
+      height: 90,
+       class: 'normal-floating'
+    },
+  
+  {
+  
+    src: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/image-ZSVPF5ZpbF2JKLEAdNywNcDKbDtNuG.png",//vintage telescope
+    width: 80,
+    height: 80,
+    class: 'glove-special'
+  }
+  
+    
+    
+    ];
+
+  // Electronic component images
+  const componentImages = [
+   
   ];
 
   // Create floating components
   function createFloatingComponents() {
     const container = document.getElementById('floatingComponents');
     
-    // Create fewer instances of each component (reduced from 15 to 7)
-    for (let i = 0; i < 7; i++) {
-      const randomComponent = componentImages[Math.floor(Math.random() * componentImages.length)];
-      const img = document.createElement('img');
-      
+    // Create a shuffled copy of componentImages to display each component once
+    const shuffledComponents = [...componentImages];
+    // Fisher-Yates shuffle algorithm
+    for (let i = shuffledComponents.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [shuffledComponents[i], shuffledComponents[j]] = [shuffledComponents[j], shuffledComponents[i]];
+    }
+    
+    // Create an instance for each component in the shuffled order
+    shuffledComponents.forEach(randomComponent => {
+        const img = document.createElement('img');
       img.src = randomComponent.src;
       img.width = randomComponent.width;
       img.height = randomComponent.height;
@@ -2028,7 +2175,31 @@
       img.dataset.rotationSpeed = rotationSpeed;
       
       container.appendChild(img);
-    }
+    })
+
+      // Create special components (one instance each)
+  specialComponents.forEach(component => {
+    const img = document.createElement('img');
+    img.src = component.src;
+    img.width = component.width;
+    img.height = component.height;
+    img.className = `floating-component ${component.class}`;
+    img.alt = "Special component";
+    
+    // Random initial position
+    img.style.left = `${Math.random() * window.innerWidth}px`;
+    img.style.top = `${Math.random() * window.innerHeight}px`;
+    
+    // Random movement direction and speed
+    img.dataset.speedX = (Math.random() - 0.5) * 0.5;
+    img.dataset.speedY = (Math.random() - 0.5) * 0.5;
+    
+    img.dataset.rotationSpeed = (Math.random() - 0.5) * 1;
+    img.dataset.rotation = Math.random() * 360;
+    
+    container.appendChild(img);
+  });
+
   }
 
   // Animate floating components
@@ -2108,7 +2279,7 @@
     // Star colors for dark mode
     const darkModeStarColors = [
       'rgba(255, 255, 255, 0.8)',  // White
-      'rgba(255, 0, 255, 0.8)',    // Magenta
+      //'rgba(255, 0, 255, 0.8)',    // Magenta
       'rgba(0, 255, 255, 0.8)',    // Cyan
       //'rgba(0, 255, 0, 0.8)',      // Green
       //'rgba(255, 0, 0, 0.8)',      // Red
@@ -2159,7 +2330,7 @@
         const star = stars[i];
         
         // Move star outward from center
-        star.z -= 1;
+        star.z -= 0.25;
         
         // Reset star if it goes out of bounds
         if (star.z <= 0) {
