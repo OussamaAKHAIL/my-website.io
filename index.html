@@ -1,3 +1,4 @@
+<!-- This website is for my portfolio. I know the code isn't well organized, but hey, it did what it's supposed to do—look like a portfolio while hiding Easter eggs, games, jokes, and more. Got it? Okay! -->
 <!DOCTYPE html>
 <html lang="en" class="dark">
 <head>
@@ -94,7 +95,7 @@
     position: fixed;
     z-index: -5;
     opacity: 0.4;
-    pointer-events: none;
+    /*pointer-events: none;*/
     transition: opacity 0.3s;
   }
 
@@ -102,6 +103,13 @@
     opacity: 0.6;
   }
 
+  .clickable-component {
+    transform: translate3d(0,0,0); /* Create new stacking context */
+    will-change: transform; /* Optimize for animations */
+    pointer-events: auto !important;
+    cursor: pointer;
+    z-index: 50 !important;
+}
   /* Theme toggle and top navigation */
   .top-bar {
     position: fixed;
@@ -110,7 +118,7 @@
     width: 100%;
     background-color: var(--nav-bg);
     backdrop-filter: blur(10px);
-    z-index: 110;
+    z-index: 1000;
     padding: 0.75rem 0;
     border-bottom: 1px solid var(--border-color);
     display: flex;
@@ -142,7 +150,7 @@
   }
 
   .theme-toggle-track {
-    position: absolute;
+    position: absolute  !important;
     top: 3px;
     left: 3px;
     width: 24px;
@@ -172,7 +180,7 @@
     width: 100%;
     background-color: var(--nav-bg);
     backdrop-filter: blur(10px);
-    z-index: 100;
+    z-index: 1000;
     padding: 0.75rem 0;
     border-bottom: 1px solid var(--border-color);
   }
@@ -287,6 +295,7 @@
     align-items: center;
     padding: 7rem 1rem 2rem;
     text-align: center;
+    
   }
 
   .profile-container {
@@ -294,6 +303,7 @@
     flex-direction: column;
     align-items: center;
     margin-bottom: 1.5rem;
+   
   }
 
   @media (min-width: 768px) {
@@ -301,6 +311,8 @@
       flex-direction: row;
       gap: 2rem;
       align-items: flex-start;
+      position: relative;
+    z-index: 100;
     }
   }
 
@@ -309,6 +321,8 @@
     flex-direction: column;
     align-items: center;
     gap: 1rem;
+    position: relative;
+    z-index: 100;
   }
 
   .profile-image {
@@ -318,11 +332,15 @@
     object-fit: cover;
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
     transition: all 0.3s ease;
+    position: relative;
+    z-index: 100;
   }
 
   .profile-image:hover {
     transform: scale(1.05);
     box-shadow: 0 8px 25px rgba(0, 0, 0, 0.5);
+    position: relative;
+    z-index: 100;
   }
 
   .profile-links {
@@ -330,6 +348,8 @@
     flex-direction: column;
     gap: 0.75rem;
     width: 100%;
+    position: relative;
+    z-index: 100;
   }
 
   .profile-link {
@@ -344,6 +364,8 @@
     background-color: var(--card-bg);
     border: 1px solid var(--border-color);
     transition: all 0.3s;
+    position: relative;
+    z-index: 100;
   }
 
   .linkedin-link:hover {
@@ -351,6 +373,8 @@
     background-color: var(--bg-secondary);
     transform: translateY(-3px);
     box-shadow: 0 5px 15px rgba(0, 119, 181, 0.3);
+    position: relative;
+    z-index: 100;
   }
 
   .cv-link:hover {
@@ -358,14 +382,20 @@
     background-color: var(--bg-secondary);
     transform: translateY(-3px);
     box-shadow: 0 5px 15px rgba(255, 87, 34, 0.3);
+    position: relative;
+    z-index: 100;
   }
 
   .linkedin-icon {
     color: #0077b5;
+    position: relative;
+    z-index: 100;
   }
 
   .cv-icon {
     color: #ff5722;
+    position: relative;
+    z-index: 100;
   }
 
   .github-link:hover {
@@ -373,10 +403,14 @@
     background-color: var(--bg-secondary);
     transform: translateY(-3px);
     box-shadow: 0 5px 15px rgba(110, 84, 148, 0.3);
+    position: relative;
+    z-index: 100;
     }
 
   .github-icon {
     color: #6e5494;
+    position: relative;
+    z-index: 100;
     }  
 
     @media (max-width: 768px) {
@@ -542,6 +576,8 @@
     padding-bottom: 0.5rem;
     display: inline-block;
     transition: all 0.3s;
+    position: relative;
+    z-index: 100;
   }
 
   .section-title:hover {
@@ -615,6 +651,8 @@
     display: flex;
     flex-direction: column;
     height: 180px;
+    
+    z-index: 100;
   }
 
   .timeline-card:hover {
@@ -622,6 +660,8 @@
     box-shadow: 0 0 25px var(--nav-education-color);
     border-color: var(--nav-education-color);
     height: auto;
+    position: relative;
+    z-index: 100;
   }
 
   .timeline-logo {
@@ -638,6 +678,8 @@
 
   .timeline-card:hover .timeline-logo {
     transform: scale(1.1);
+    position: relative;
+    z-index: 100;
   }
 
   .timeline-content {
@@ -662,6 +704,8 @@
 
   .timeline-card:hover .timeline-title {
     color: var(--nav-education-color);
+    position: relative;
+    z-index: 100;
   }
 
   .timeline-subtitle {
@@ -692,6 +736,8 @@
     max-height: 500px;
     opacity: 1;
     transform: scale(1);
+    position: relative;
+    z-index: 100;
   }
 
   .timeline-skills-title {
@@ -715,6 +761,8 @@
 
   .timeline-card:hover .timeline-skills-list li {
     color: var(--text-primary);
+    position: relative;
+    z-index: 100;
   }
 
   @media screen and (max-width: 768px) {
@@ -749,13 +797,17 @@
     overflow-x: hidden;
     width: 100%;
     padding: 1rem 0;
+    
     position: relative;
+    z-index: 100;
   }
 
   .cards-container {
     display: flex;
     gap: 1.5rem;
     transition: transform 0.5s ease;
+    position: relative;
+    z-index: 100;
   }
 
   .card {
@@ -770,6 +822,8 @@
     height: 100%;
     display: flex;
     flex-direction: column;
+    position: relative;
+    z-index: 100;
   }
 
   .card:hover {
@@ -777,6 +831,8 @@
     box-shadow: 0 0 20px var(--accent-secondary), 0 0 40px rgba(0, 255, 0, 0.2);
     border-color: var(--accent-secondary);
     background-color: var(--card-bg);
+    position: relative;
+    z-index: 100;
   }
 
   /*.card-header {
@@ -911,6 +967,8 @@
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
     display: flex;
     flex-direction: column;
+    position: relative;
+    z-index: 100;
 
    
   }
@@ -919,6 +977,8 @@
     
     box-shadow: 0 0 30px var(--project-glow), 0 0 30px var(--project-glow);
     transform: translateY(-5px);
+    position: relative;
+    z-index: 100;
   }
 
   .project-image {
@@ -1012,15 +1072,21 @@
   border-radius: 1rem;
   overflow: hidden;
   transition: transform 0.3s ease;
+  position: relative;
+  z-index: 100;
 }
 
 .project-card:hover {
   transform: translateY(-5px);
+  position: relative;
+  z-index: 100;
 }
 
 @media (max-width: 768px) {
   .project-card {
     min-width: 85vw;
+    position: relative;
+    z-index: 100;
   }
 }
   
@@ -1040,6 +1106,8 @@
     border: 1px solid var(--card-border);
     border-radius: 0.5rem;
     transition: all 0.3s;
+    position: relative;
+    z-index: 100;
   }
 
   .skills-grid:hover {
@@ -1129,6 +1197,8 @@
     font-weight: 500;
     cursor: pointer;
     transition: all 0.3s;
+    position: relative;
+    z-index: 100;
   }
 
   .submit-btn:hover {
@@ -1209,7 +1279,7 @@
     cursor: pointer;
     opacity: 0;
     transition: all 0.3s;
-    z-index: 90;
+    z-index: 500;
   }
 
   .back-to-top.visible {
@@ -1533,6 +1603,102 @@
   align-items: stretch; /* Make all cards stretch to same height */
 }
 
+
+/*this for showing the clicked elements*/
+
+.component-modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.9);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+    backdrop-filter: blur(5px);
+  }
+
+  .component-modal-overlay.active {
+    display: flex;
+    animation: overlayFadeIn 0.3s ease;
+  }
+
+  .component-modal {
+    background: var(--card-bg);
+    border-radius: 15px;
+    padding: 20px;
+    max-width: 800px;
+    width: 90%;
+    display: flex;
+    gap: 20px;
+    position: relative;
+    animation: modalSlideIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  }
+
+  .modal-image-container {
+    flex: 1;
+    min-width: 300px;
+  }
+
+  .modal-image {
+    width: 100%;
+    height: auto;
+    border-radius: 10px;
+  }
+
+  .modal-content {
+    flex: 1;
+    color: var(--text-primary);
+    overflow-y: auto;
+    max-height: 70vh;
+    padding-right: 10px;
+  }
+
+  .modal-close {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    width: 30px;
+    height: 30px;
+    background: var(--error-color);
+    border-radius: 50%;
+    border: none;
+    color: white;
+    cursor: pointer;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  @keyframes modalSlideIn {
+    from {
+      transform: translateY(100px) scale(0.9);
+      opacity: 0;
+    }
+    to {
+      transform: translateY(0) scale(1);
+      opacity: 1;
+    }
+  }
+
+  @keyframes overlayFadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+
+  @media (max-width: 768px) {
+    .component-modal {
+      flex-direction: column;
+      width: 95%;
+    }
+    
+    .modal-image-container {
+      min-width: auto;
+    }
+  }
    /* Add this to your existing CSS
    .normal-flouting {
     filter: drop-shadow(0 0 10px rgba(255, 170, 0, 0.7));
@@ -2114,13 +2280,24 @@
       src:"https://hebbkx1anhila5yf.public.blob.vercel-storage.com/image-removebg-preview%20%282%29-6IejiMoENsw8nCxw8ummSWDeIJ3NPz.png", //disk
       width: 55,
       height: 55,
-       class: 'normal-floating'
+       class: 'normal-floating',
+       modalInfo: {
+    title: "Storage Disk",
+    description: "/n ERROR 404: Common Sense Not Found. Restart your brain and try again, or maybe do what it says...",
+    technical: "Capacities: 1.44Mb | Interfaces: SATA, NVMe"
+  }
+
     },
     {
       src: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/image-removebg-preview%20%283%29%20%281%29-4ZGwuavTZAc6z9Z6Gb22MwSllOWl2M.png", // pizza
       width: 80,
       height: 80,
-       class: 'normal-floating'
+       class: 'normal-floating',
+       modalInfo: {
+      title: "Floating Slice of Pizza",
+       description: "Congratulations! You found the lost pizza from Apollo 11. Too bad it’s still out of reach.",
+       //technical: `...<a class="pizza-link" href="https://v0-image-website.vercel.app/" ...>Learn pizza space facts</a>`
+  }
     },
 
     {
@@ -2164,7 +2341,12 @@
     src: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/image-removebg-preview%20%284%29-ioUveaiu9zutE3474jvTsCkdU0I0eO.png",//duck
     width: 100,
     height: 56,
-    class: 'glove-special'
+    class: 'glove-special',
+    modalInfo: {
+      title: "Mr. Quackstronaut",
+       description: "Congratulations! You have just discovered the rare Quackstronaut! Unfortunately, it does absolutely nothing. But hey, at least now you can say you've clicked on a duck in space.",
+       //technical: "Capacities: 1TB-10TB | Interfaces: SATA, NVMe"
+  }
   },
 
   {
@@ -2178,7 +2360,12 @@
     src: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/image-kAjN722F3XyCnloNgQLdY4bS6cOsG8.png",//glove
     width: 120,
     height: 120,
-    class: 'glove-special'
+    class: 'glove-special',
+    modalInfo: {
+      title: "WARNING: May Contain Astronaut Hand",
+       description: "Legend says this glove belonged to the first astronaut who tried to high-five an alien... It didn’t end well, good luck finding the rest of the Astronaut :)",
+       //technical: "Capacities: 1TB-10TB | Interfaces: SATA, NVMe"
+    }
   },
   
   
@@ -2191,7 +2378,12 @@
     src: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/image-hly7J5OfcKguXPRpLDWSYRCowCJPNA.png",//telescope
     width: 447,
     height: 557,
-    class: 'glove-special'
+    class: 'glove-special',
+    modalInfo: {
+      title: "AK-SCOPE",
+       description: "Behold! The Universe… in HD (Well, Sort of)",
+       //technical: `...<a class="pizza-link" href="ak-space-technologie-store.vercel.app/" ...>Learn pizza space facts</a>`
+  }
   },
   
   {
@@ -2207,7 +2399,12 @@
     src: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/image-ZSVPF5ZpbF2JKLEAdNywNcDKbDtNuG.png",//vintage telescope
     width: 80,
     height: 80,
-    class: 'normal-floating'
+    class: 'normal-floating',
+    modalInfo: {
+      title: "The Forgotten Telescope",
+       description: `NASA Rejected This Design… For Obvious Reasons. but  hey you can buy one from here : <a class="pizza-link" href="https://ak-space-technologie-store.vercel.app/" ...>AK-space technologie store</a>`,
+      // technical: `NASA Rejected This Design… For Obvious Reasons. but  hey you can buy one from here : <a class="pizza-link" href="https://ak-space-technologie-store.vercel.app/" ...>AK-space technologie store</a>`
+  }
   }
   
     
@@ -2219,6 +2416,43 @@
    
   ];
 
+
+  function showComponentModal(componentData) {
+    if(document.querySelector('.component-modal-overlay')) return;
+  const overlay = document.createElement('div');
+  overlay.className = 'component-modal-overlay';
+  
+  const modal = document.createElement('div');
+  modal.className = 'component-modal';
+  
+  const closeBtn = document.createElement('button');
+  closeBtn.className = 'modal-close';
+  closeBtn.innerHTML = '×';
+  closeBtn.onclick = () => overlay.remove();
+  
+  const modalContent = `
+    <div class="modal-image-container">
+      <img src="${componentData.src}" alt="${componentData.modalInfo.title}" class="modal-image">
+    </div>
+    <div class="modal-content">
+      <h2>${componentData.modalInfo.title}</h2>
+      <p>${componentData.modalInfo.description}</p>
+      ${componentData.modalInfo.technical ? `<div class="tech-specs"><h3>Technical Specifications</h3><p>${componentData.modalInfo.technical}</p></div>` : ''}
+    </div>
+  `;
+  
+  modal.innerHTML = modalContent;
+  modal.appendChild(closeBtn);
+  overlay.appendChild(modal);
+  document.body.appendChild(overlay);
+  
+  // Close when clicking outside
+  overlay.addEventListener('click', (e) => {
+    if (e.target === overlay) overlay.remove();
+  });
+  
+  setTimeout(() => overlay.classList.add('active'), 10);
+}
   // Create floating components
   function createFloatingComponents() {
     const container = document.getElementById('floatingComponents');
@@ -2269,7 +2503,12 @@
     img.src = component.src;
     img.width = component.width;
     img.height = component.height;
-    img.className = `floating-component ${component.class}`;
+    img.className = `floating-component ${component.class || ''}`;
+    if (component.modalInfo) {
+      img.classList.add('clickable-component');
+      img.style.cursor = 'pointer';
+      img.addEventListener('click', () => showComponentModal(component));
+    }
     img.alt = "Special component";
     
     // Random initial position
@@ -2901,6 +3140,12 @@ function normalizeProjectHeights() {
 // Run on load and resize
 window.addEventListener('load', normalizeProjectHeights);
 window.addEventListener('resize', normalizeProjectHeights);
+
+
+//-------------------------------------------------------
+
+
+
 </script>
 </body>
 </html>
