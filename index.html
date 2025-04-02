@@ -1827,7 +1827,7 @@
           </svg>
           Visit my LinkedIn
         </a>
-        <a href="Oussama AK-HAIL CV latex.pdf" download class="profile-link cv-link">
+        <a href="oussama-cv.pdf" download class="profile-link cv-link">
           <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="cv-icon">
             <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
             <polyline points="14 2 14 8 20 8"></polyline>
@@ -2402,7 +2402,7 @@
     class: 'normal-floating',
     modalInfo: {
       title: "The Forgotten Telescope",
-       description: `NASA Rejected This Design… For Obvious Reasons. but  hey you can buy one from here : <a class="pizza-link" href="https://ak-space-technologie-store.vercel.app/" ...>AK-space technologie store</a>`,
+       description: `NASA Rejected This Design… For Obvious Reasons. but  hey you can buy one from here : <a class="pizza-link" href="https://solve-me-pls.vercel.app/" ...>AK-space technologie store</a>`,
       // technical: `NASA Rejected This Design… For Obvious Reasons. but  hey you can buy one from here : <a class="pizza-link" href="https://ak-space-technologie-store.vercel.app/" ...>AK-space technologie store</a>`
   }
   }
@@ -2906,7 +2906,7 @@ destructBtn.addEventListener('click', () => {
 
   // Start countdown
   countdownOverlay.style.display = 'flex';
-  let count = 3;
+  let count = 0;
   
   const countdownInterval = setInterval(() => {
     countdownOverlay.innerHTML = `<div class="countdown-text">${count}</div>`;
@@ -3143,7 +3143,63 @@ window.addEventListener('resize', normalizeProjectHeights);
 
 
 //-------------------------------------------------------
+// Konami Code Implementation
+const konamiCode = [
+  'ArrowUp', 'ArrowUp', 
+  'ArrowDown', 'ArrowDown', 
+  'ArrowLeft', 'ArrowRight', 
+  'ArrowLeft', 'ArrowRight', 
+  'b', 'a'
+];
+let konamiIndex = 0;
 
+document.addEventListener('keydown', (e) => {
+  // Check if the pressed key matches the current Konami code position
+  if (e.key === konamiCode[konamiIndex]) {
+    konamiIndex++;
+    
+    // If the full code was entered
+    if (konamiIndex === konamiCode.length) {
+      // Reset the index
+      konamiIndex = 0;
+      
+      // Create a fun visual effect
+      const konamiEffect = document.createElement('div');
+      konamiEffect.style.position = 'fixed';
+      konamiEffect.style.top = '0';
+      konamiEffect.style.left = '0';
+      konamiEffect.style.width = '100%';
+      konamiEffect.style.height = '100%';
+      konamiEffect.style.backgroundColor = 'rgba(0,0,0,0.8)';
+      konamiEffect.style.zIndex = '99999';
+      konamiEffect.style.display = 'flex';
+      konamiEffect.style.justifyContent = 'center';
+      konamiEffect.style.alignItems = 'center';
+      konamiEffect.style.flexDirection = 'column';
+      konamiEffect.style.color = '#fff';
+      konamiEffect.style.fontFamily = 'monospace';
+      konamiEffect.style.fontSize = '2rem';
+      konamiEffect.style.textAlign = 'center';
+      
+      konamiEffect.innerHTML = `
+        <div style="margin-bottom: 20px;">SECRET UNLOCKED!</div>
+        <div style="font-size: 1.5rem; margin-bottom: 30px;">Opening AK Space Technologie Store...</div>
+        <div style="font-size: 1rem;">(30 lives added to your account... just kidding)</div>
+      `;
+      
+      document.body.appendChild(konamiEffect);
+      
+      // Open the store after a short delay
+      setTimeout(() => {
+        window.open('https://ak-space-technologie-store.vercel.app/', '_blank');
+        document.body.removeChild(konamiEffect);
+      }, 2000);
+    }
+  } else {
+    // Reset if wrong key is pressed
+    konamiIndex = 0;
+  }
+});
 
 
 </script>
