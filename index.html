@@ -8,15 +8,6 @@
 <link rel="icon" href="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/cropped_image-L5i446B42TYZaSZz9PEpIxzGh0UTXf.png" type="image/png">
 
 <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
-<!--<script src="config.js"></script> i removed this to deploy without prblm-->
-  <script>
-  // Access environment variables in vercel
-  const emailjsConfig = {
-    serviceId: process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID,
-    templateId: process.env.NEXT_PUBLIC_EMAILJS_TEMPLATE_ID,
-    publicKey: process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY
-  };
-</script>
 <style>
   /* Reset and base styles */ 
   * {
@@ -304,8 +295,6 @@
     align-items: center;
     padding: 7rem 1rem 2rem;
     text-align: center;
-    position: relative;
-    z-index: 100;
     
   }
 
@@ -314,8 +303,6 @@
     flex-direction: column;
     align-items: center;
     margin-bottom: 1.5rem;
-    position: relative;
-    z-index: 100;
    
   }
 
@@ -1154,21 +1141,15 @@
     max-width: 600px;
     margin: 0 auto;
     transition: all 0.3s;
-    position: relative;
-    z-index: 100;
   }
 
   .contact-form:hover {
     box-shadow: 0 0 20px var(--nav-contact-color), 0 0 40px rgba(255, 51, 102, 0.2);
     border-color: var(--nav-contact-color);
-    position: relative;
-    z-index: 100;
   }
 
   .form-group {
     margin-bottom: 1.5rem;
-    position: relative;
-    z-index: 100;
   }
 
   .form-label {
@@ -1177,8 +1158,6 @@
     color: var(--text-secondary);
     font-weight: 500;
     transition: color 0.3s;
-    position: relative;
-    z-index: 100;
   }
 
   .form-control {
@@ -1190,30 +1169,22 @@
     color: var(--text-primary);
     font-family: inherit;
     transition: all 0.3s;
-    position: relative;
-    z-index: 100;
   }
 
   .form-control:focus {
     outline: none;
     border-color: var(--accent-primary);
     box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.25);
-    position: relative;
-    z-index: 100;
   }
 
   .form-control::placeholder {
     color: var(--text-secondary);
     opacity: 0.7;
-    position: relative;
-    z-index: 100;
   }
 
   textarea.form-control {
     min-height: 150px;
     resize: vertical;
-    position: relative;
-    z-index: 100;
   }
 
   .submit-btn {
@@ -1234,8 +1205,6 @@
     background-color: var(--accent-secondary);
     transform: translateY(-3px);
     box-shadow: 0 5px 15px rgba(59, 130, 246, 0.4);
-    position: relative;
-    z-index: 100;
   }
 
   .error-message {
@@ -1243,8 +1212,6 @@
     font-size: 0.875rem;
     margin-top: 0.5rem;
     display: none;
-    position: relative;
-    z-index: 100;
   }
 
   .success-message {
@@ -1256,8 +1223,6 @@
     padding: 0.75rem;
     background-color: rgba(16, 185, 129, 0.1);
     border-radius: 0.25rem;
-    position: relative;
-    z-index: 100;
   }
 
   /* Form loading state */
@@ -1265,8 +1230,6 @@
     display: none;
     text-align: center;
     margin-top: 1rem;
-    position: relative;
-    z-index: 100;
   }
 
   .spinner {
@@ -1290,8 +1253,6 @@
     background-color: var(--footer-bg);
     backdrop-filter: blur(10px);
     border-top: 1px solid var(--border-color);
-    position: relative;
-    z-index: 100;
   }
 
   .footer p {
@@ -2301,12 +2262,10 @@
 </div>
 
 <script>
-  // Initialize EmailJS
-  if (emailjsConfig.publicKey) {
-  emailjs.init(emailjsConfig.publicKey);
-} else {
-  console.error("EmailJS public key not configured!");
-}
+  
+  (function() {
+    emailjs.init("bnq6VTyL43ZGNb5Bs"); 
+  })();
 
   const specialComponents = [
   {
@@ -2443,7 +2402,7 @@
     class: 'normal-floating',
     modalInfo: {
       title: "The Forgotten Telescope",
-       description: `NASA Rejected This Design… For Obvious Reasons. but  hey you can buy one from here : <a class="pizza-link" href="https://solve-me-pls.vercel.app/" ...>AK-space technologie store</a>`,
+       description: `NASA Rejected This Design… For Obvious Reasons. but  hey you can buy one from here : <a class="pizza-link" href="https://ak-space-technologie-store.vercel.app/" ...>AK-space technologie store</a>`,
       // technical: `NASA Rejected This Design… For Obvious Reasons. but  hey you can buy one from here : <a class="pizza-link" href="https://ak-space-technologie-store.vercel.app/" ...>AK-space technologie store</a>`
   }
   }
@@ -2880,13 +2839,15 @@ window.addEventListener('resize', normalizeCardHeights);
         // Prepare template parameters
         const templateParams = {
           from_name: nameInput.value.trim(),
+          to_name: "OUSSAMA AK",
           from_email: emailInput.value.trim(),
-          message: messageInput.value.trim(),
-          to_email: 'ak.oussama1604@gmail.com'
+          to_email: "ak.oussama1604@gmail.com",
+          message: messageInput.value.trim()
+          
         };
         
         // Send email using EmailJS
-        emailjs.send(emailjsConfig.serviceId, emailjsConfig.templateId, templateParams)
+        emailjs.send('service_lgrhfx7', 'template_6vgs6df', templateParams)
           .then(function(response) {
             // Hide loading spinner
             formLoading.style.display = 'none';
@@ -3232,7 +3193,7 @@ document.addEventListener('keydown', (e) => {
       
       // Open the store after a short delay
       setTimeout(() => {
-        window.open('https://ak-space-technologie-store.vercel.app/', '_blank');
+        window.open('https://solve-me-pls.vercel.app/', '_blank');
         document.body.removeChild(konamiEffect);
       }, 2000);
     }
