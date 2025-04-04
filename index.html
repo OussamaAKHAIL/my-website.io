@@ -8,7 +8,7 @@
 <link rel="icon" href="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/cropped_image-L5i446B42TYZaSZz9PEpIxzGh0UTXf.png" type="image/png">
 
 <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
-<script src="config.js"></script>
+<!--<script src="config.js"></script> i removed this to deploy without prblm-->
 <style>
   /* Reset and base styles */ 
   * {
@@ -2295,7 +2295,7 @@
 <script>
   // Initialize EmailJS
   (function() {
-    emailjs.init(process.env.EMAILJS_PUBLIC_KEY); // Replace with your EmailJS public key
+    emailjs.init(EMAILJS_PUBLIC_KEY); // Replace with your EmailJS public key
   })();
 
   const specialComponents = [
@@ -2876,7 +2876,7 @@ window.addEventListener('resize', normalizeCardHeights);
         };
         
         // Send email using EmailJS
-        emailjs.send(process.env.EMAILJS_SERVICE_ID, process.env.EMAILJS_TEMPLATE_ID, templateParams)
+        emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, templateParams)
           .then(function(response) {
             // Hide loading spinner
             formLoading.style.display = 'none';
