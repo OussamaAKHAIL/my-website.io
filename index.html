@@ -1141,15 +1141,21 @@
     max-width: 600px;
     margin: 0 auto;
     transition: all 0.3s;
+    position: relative;
+    z-index: 100;
   }
 
   .contact-form:hover {
     box-shadow: 0 0 20px var(--nav-contact-color), 0 0 40px rgba(255, 51, 102, 0.2);
     border-color: var(--nav-contact-color);
+    position: relative;
+    z-index: 100;
   }
 
   .form-group {
     margin-bottom: 1.5rem;
+    position: relative;
+    z-index: 100;
   }
 
   .form-label {
@@ -1158,6 +1164,8 @@
     color: var(--text-secondary);
     font-weight: 500;
     transition: color 0.3s;
+    position: relative;
+    z-index: 100;
   }
 
   .form-control {
@@ -1169,22 +1177,30 @@
     color: var(--text-primary);
     font-family: inherit;
     transition: all 0.3s;
+    position: relative;
+    z-index: 100;
   }
 
   .form-control:focus {
     outline: none;
     border-color: var(--accent-primary);
     box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.25);
+    position: relative;
+    z-index: 100;
   }
 
   .form-control::placeholder {
     color: var(--text-secondary);
     opacity: 0.7;
+    position: relative;
+    z-index: 100;
   }
 
   textarea.form-control {
     min-height: 150px;
     resize: vertical;
+    position: relative;
+    z-index: 100;
   }
 
   .submit-btn {
@@ -1205,6 +1221,8 @@
     background-color: var(--accent-secondary);
     transform: translateY(-3px);
     box-shadow: 0 5px 15px rgba(59, 130, 246, 0.4);
+    position: relative;
+    z-index: 100;
   }
 
   .error-message {
@@ -1212,6 +1230,8 @@
     font-size: 0.875rem;
     margin-top: 0.5rem;
     display: none;
+    position: relative;
+    z-index: 100;
   }
 
   .success-message {
@@ -1223,6 +1243,8 @@
     padding: 0.75rem;
     background-color: rgba(16, 185, 129, 0.1);
     border-radius: 0.25rem;
+    position: relative;
+    z-index: 100;
   }
 
   /* Form loading state */
@@ -1230,6 +1252,8 @@
     display: none;
     text-align: center;
     margin-top: 1rem;
+    position: relative;
+    z-index: 100;
   }
 
   .spinner {
@@ -1240,6 +1264,8 @@
     border-radius: 50%;
     border-top-color: var(--accent-primary);
     animation: spin 1s ease-in-out infinite;
+    position: relative;
+    z-index: 100;
   }
 
   @keyframes spin {
@@ -1253,15 +1279,21 @@
     background-color: var(--footer-bg);
     backdrop-filter: blur(10px);
     border-top: 1px solid var(--border-color);
+    position: relative;
+    z-index: 100;
   }
 
   .footer p {
     color: var(--text-secondary);
     transition: all 0.3s;
+    position: relative;
+    z-index: 100;
   }
 
   .footer p:hover {
     color: var(--text-primary);
+    position: relative;
+    z-index: 100;
   }
 
   .back-to-top {
@@ -2835,7 +2867,7 @@ window.addEventListener('resize', normalizeCardHeights);
       if (isValid) {
         // Show loading spinner
         formLoading.style.display = 'block';
-        
+         
         // Prepare template parameters
         const templateParams = {
           from_name: nameInput.value.trim(),
