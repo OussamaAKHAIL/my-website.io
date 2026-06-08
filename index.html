@@ -11,6 +11,7 @@
 <style>
   /* ============================================
      LIQUID GLASS THEME — Apple-inspired
+    
      ============================================ */
 
   *, *::before, *::after {
@@ -21,7 +22,6 @@
   }
 
   :root {
-    /* Light mode — pearly liquid glass */
     --bg-primary: #eef1f6;
     --bg-secondary: #f7f9fc;
     --bg-grad-1: #c7d2ff;
@@ -36,7 +36,6 @@
     --accent-primary: #3b82f6;
     --accent-secondary: #60a5fa;
 
-    /* Glass surface tokens */
     --glass-bg: rgba(255, 255, 255, 0.45);
     --glass-bg-strong: rgba(255, 255, 255, 0.65);
     --glass-border: rgba(255, 255, 255, 0.75);
@@ -59,7 +58,6 @@
     --timeline-dot: #3b82f6;
     --project-glow: rgba(0, 200, 100, 0.45);
 
-    /* Navigation menu item accent colors — preserved */
     --nav-home-color: #ff00ff;
     --nav-education-color: #00bcd4;
     --nav-experience-color: #ffb300;
@@ -69,7 +67,6 @@
   }
 
   .dark {
-    /* Dark mode — deep liquid glass */
     --bg-primary: #05060a;
     --bg-secondary: #0a0b12;
     --bg-grad-1: #1a0b3e;
@@ -122,9 +119,6 @@
     transition: background-color 0.4s ease, color 0.4s ease;
   }
 
-  /* ============================================
-     Animated liquid background blobs
-     ============================================ */
   body::before, body::after {
     content: "";
     position: fixed;
@@ -159,7 +153,6 @@
     100% { transform: translate(-10vmax, -6vmax) scale(1.2) rotate(-30deg); }
   }
 
-  /* Star canvas */
   #starCanvas {
     position: fixed;
     top: 0; left: 0;
@@ -169,32 +162,24 @@
     opacity: 0.7;
   }
 
-  /* ============================================
-     FLOATING COMPONENTS — FIXED Z-INDEX
-     All components stay behind content (z-index: -5)
-     Clickable components use document-level click detection
-     ============================================ */
   .floating-component {
     position: fixed;
-    z-index: -5;
+    z-index: 1;
     opacity: 0.45;
     transition: opacity 0.3s, filter 0.3s;
-    pointer-events: none;  /* Clicks pass through to document handler */
+    pointer-events: none;
+    user-select: none;
   }
   .dark .floating-component { opacity: 0.65; }
 
-  /* Clickable components: BEHIND content but detectable via JS */
   .clickable-component {
     transform: translate3d(0,0,0);
     will-change: transform;
     cursor: pointer;
-    z-index: -5 !important;  /* FORCE behind content (was 50) */
-    pointer-events: none;    /* Let clicks fall through, we detect via document click */
+    z-index: 1 !important;
+    pointer-events: none;
   }
 
-  /* ============================================
-     Reusable glass surface
-     ============================================ */
   .glass {
     background: var(--glass-bg);
     backdrop-filter: blur(24px) saturate(180%);
@@ -246,7 +231,7 @@
     align-items: center;
     padding: 0 1rem;
     position: relative;
-    z-index: 1;
+    z-index: -1;
   }
   .nav-links { display: flex; gap: 0.25rem; flex-wrap: wrap; }
   .nav-link {
@@ -288,6 +273,7 @@
     align-items: center;
     margin-left: 1rem;
     gap: 0.5rem;
+    z-index: -1
   }
   .theme-toggle {
     position: relative;
@@ -326,7 +312,15 @@
     padding: 9rem 1.5rem 3rem;
     text-align: center;
     position: relative;
+    /* Hero itself passes clicks through to floating components in empty areas */
+    pointer-events: none;
   }
+  /* Re-enable pointer-events on actual interactive hero children */
+  .hero .profile-container,
+  .hero .scroll-down {
+    pointer-events: auto;
+  }
+
   .profile-container {
     display: flex;
     flex-direction: column;
@@ -334,7 +328,7 @@
     margin-bottom: 1.5rem;
     gap: 2rem;
     position: relative;
-    z-index: 10;
+    z-index: 3;
   }
   @media (min-width: 768px) {
     .profile-container { flex-direction: row; align-items: center; gap: 3rem; }
@@ -345,7 +339,7 @@
     align-items: center;
     gap: 1rem;
     position: relative;
-    z-index: 10;
+    z-index: 3;
   }
   .profile-image {
     width: 200px; height: 200px;
@@ -359,7 +353,7 @@
     transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1),
                 box-shadow 0.5s cubic-bezier(0.4, 0, 0.2, 1);
     position: relative;
-    z-index: 10;
+    z-index: 1;
   }
   .profile-image:hover {
     transform: scale(1.06) rotate(-2deg);
@@ -499,17 +493,24 @@
 
   /* ============================================
      Container & Sections
+     KEY FIX: container and section are pointer-events: none
+     so empty space is transparent to clicks.
+     Only actual interactive elements re-enable pointer-events.
      ============================================ */
   .container {
     max-width: 1200px;
     margin: 0 auto;
     padding: 3rem 1.25rem;
     position: relative;
-    z-index: 2;
+    z-index: 1;
+    /* Pass clicks through the container in empty areas */
+    pointer-events: none;
   }
   .section {
     margin-bottom: 4rem;
     scroll-margin-top: 7rem;
+    /* Pass clicks through section in empty areas */
+    pointer-events: none;
   }
   .section-title {
     font-size: 2.1rem;
@@ -528,6 +529,8 @@
     position: relative;
     z-index: 10;
     transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    /* Re-enable pointer-events on the title pill itself */
+    pointer-events: auto;
   }
   .section-title::before {
     content:""; position:absolute; inset:0;
@@ -542,12 +545,15 @@
 
   /* ============================================
      Timeline — Education
+     KEY FIX: timeline wrappers are pointer-events: none,
+     only the actual card elements re-enable it.
      ============================================ */
   .timeline {
     position: relative;
     max-width: 1000px;
     margin: 0 auto;
     padding: 2rem 0;
+    pointer-events: none;
   }
   .timeline::after {
     content: '';
@@ -562,6 +568,7 @@
     left: 50%;
     margin-left: -2px;
     border-radius: 3px;
+    pointer-events: none;
   }
   .timeline-item {
     padding: 10px 40px;
@@ -569,6 +576,7 @@
     width: 50%;
     box-sizing: border-box;
     margin-bottom: 2rem;
+    pointer-events: none;
   }
   .timeline-item::after {
     content: '';
@@ -582,6 +590,7 @@
     z-index: 1;
     box-shadow: 0 0 14px var(--timeline-dot),
                 0 0 30px rgba(0, 188, 212, 0.4);
+    pointer-events: none;
   }
   .timeline-item:nth-child(odd)  { left: 0; }
   .timeline-item:nth-child(even) { left: 50%; }
@@ -601,7 +610,9 @@
     display: flex;
     flex-direction: column;
     height: 200px;
-    z-index: 5;
+    z-index: 1;
+    /* Only the card itself gets pointer events — not its wrapper */
+    pointer-events: auto;
   }
   .timeline-card::before {
     content:""; position:absolute; inset:0;
@@ -615,7 +626,7 @@
                 inset 0 1px 0 rgba(255,255,255,0.4);
     border-color: var(--nav-education-color);
     height: auto;
-    z-index: 10;
+    z-index: 1;
   }
   .timeline-logo {
     width: 44px; height: 44px;
@@ -702,6 +713,8 @@
 
   /* ============================================
      Experience Cards
+     KEY FIX: scroll wrappers and containers are
+     pointer-events: none. Only .card re-enables it.
      ============================================ */
   .cards-grid {
     display: block;
@@ -712,11 +725,11 @@
     scrollbar-color: var(--accent-primary) transparent;
     scrollbar-width: thin;
     margin: 1rem 0;
+    /* Transparent to clicks in empty areas */
+    pointer-events: none;
   }
-  .cards-grid::-webkit-scrollbar {
-    height: 10px;
-    background-color: transparent;
-  }
+  /* Re-enable pointer-events for scrollbar interaction */
+  .cards-grid::-webkit-scrollbar { height: 10px; background-color: transparent; }
   .cards-grid::-webkit-scrollbar-track {
     background: var(--glass-bg);
     border-radius: 6px;
@@ -734,6 +747,8 @@
     padding: 0 0.5rem 1rem;
     width: max-content;
     align-items: stretch;
+    /* Transparent to clicks in empty areas */
+    pointer-events: none;
   }
   .card {
     min-width: 360px;
@@ -753,6 +768,8 @@
     overflow: hidden;
     display: flex;
     flex-direction: column;
+    /* Only the card itself gets pointer events */
+    pointer-events: auto;
   }
   .card::before {
     content:""; position:absolute; inset:0;
@@ -773,7 +790,7 @@
     gap: 0.5rem;
     margin-bottom: 1rem;
     position: relative;
-    z-index: 1;
+    z-index: 2;
   }
   .card-logo-container {
     width: 52px; height: 52px;
@@ -815,7 +832,7 @@
     color: var(--text-secondary);
     line-height: 1.6;
     position: relative;
-    z-index: 1;
+    z-index: 2;
   }
   .card-content ul { padding-left: 1.2rem; }
   .card-content ul ul { margin-top: 0.3rem; }
@@ -826,6 +843,8 @@
 
   /* ============================================
      Projects
+     KEY FIX: scroll wrappers and grid are
+     pointer-events: none. Only .project-card re-enables it.
      ============================================ */
   .projects-scroll-container {
     width: 100%;
@@ -833,11 +852,10 @@
     padding: 1.5rem 0;
     scrollbar-color: var(--accent-primary) transparent;
     scrollbar-width: thin;
+    /* Transparent to clicks in empty areas */
+    pointer-events: none;
   }
-  .projects-scroll-container::-webkit-scrollbar {
-    height: 10px;
-    background-color: transparent;
-  }
+  .projects-scroll-container::-webkit-scrollbar { height: 10px; background-color: transparent; }
   .projects-scroll-container::-webkit-scrollbar-thumb {
     background: linear-gradient(90deg, var(--nav-projects-color), var(--accent-secondary));
     border-radius: 6px;
@@ -849,11 +867,15 @@
     padding: 0 0.5rem 1rem;
     width: max-content;
     align-items: stretch;
+    /* Transparent to clicks in empty areas */
+    pointer-events: none;
   }
   .project-slide {
     min-width: 380px;
     max-width: 380px;
     display: flex;
+    /* Transparent to clicks in empty areas */
+    pointer-events: none;
   }
   .project-card {
     background: var(--glass-bg);
@@ -868,6 +890,8 @@
     width: 100%;
     transition: all 0.45s cubic-bezier(0.4, 0, 0.2, 1);
     position: relative;
+    /* Only the card itself gets pointer events */
+    pointer-events: auto;
   }
   .project-card::before {
     content:""; position:absolute; inset:0;
@@ -889,7 +913,7 @@
     display: block;
     border-bottom: 1px solid var(--glass-border);
     position: relative;
-    z-index: 1;
+    z-index: 2;
   }
   .project-content {
     padding: 1.25rem 1.4rem 1.5rem;
@@ -897,7 +921,7 @@
     display: flex;
     flex-direction: column;
     position: relative;
-    z-index: 3;
+    z-index: 2;
   }
   .project-title {
     font-size: 1.15rem;
@@ -950,6 +974,8 @@
 
   /* ============================================
      Skills
+     KEY FIX: skills-grid re-enables pointer-events
+     (it's a solid glass surface, not empty space)
      ============================================ */
   .skills-grid {
     display: flex;
@@ -965,6 +991,8 @@
     position: relative;
     overflow: hidden;
     transition: all 0.4s;
+    /* Re-enable for the solid skills panel */
+    pointer-events: auto;
   }
   .skills-grid::before {
     content:""; position:absolute; inset:0;
@@ -990,7 +1018,7 @@
     box-shadow: inset 0 1px 0 rgba(255,255,255,0.3);
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     position: relative;
-    z-index: 1;
+    z-index: 2;
     cursor: default;
   }
   .skill-tag:hover {
@@ -1003,6 +1031,7 @@
 
   /* ============================================
      Contact form
+     KEY FIX: re-enable pointer-events on the solid form
      ============================================ */
   .contact-form {
     max-width: 640px;
@@ -1017,6 +1046,8 @@
     position: relative;
     overflow: hidden;
     transition: all 0.4s;
+    /* Re-enable for the solid form */
+    pointer-events: auto;
   }
   .contact-form::before {
     content:""; position:absolute; inset:0;
@@ -1028,7 +1059,7 @@
                 0 0 35px rgba(255, 51, 102, 0.25),
                 inset 0 1px 0 rgba(255,255,255,0.4);
   }
-  .form-group { margin-bottom: 1.1rem; position: relative; z-index: 1; }
+  .form-group { margin-bottom: 1.1rem; position: relative; z-index: 2; }
   .form-label {
     display: block;
     font-size: 0.88rem;
@@ -1121,7 +1152,7 @@
   }
 
   /* ============================================
-     Footer
+     Footer — re-enable pointer-events (solid surface)
      ============================================ */
   .footer {
     margin: 3rem 1rem 1rem;
@@ -1135,6 +1166,7 @@
     text-align: center;
     position: relative;
     overflow: hidden;
+    pointer-events: auto;
   }
   .footer::before {
     content:""; position:absolute; inset:0;
@@ -1152,7 +1184,7 @@
   .footer p:hover { color: var(--text-primary); }
 
   /* ============================================
-     Back to top
+     Back to top — re-enable pointer-events
      ============================================ */
   .back-to-top {
     position: fixed;
@@ -1190,7 +1222,7 @@
   .back-to-top svg { width: 22px; height: 22px; }
 
   /* ============================================
-     Self-Destruct + Easter eggs (preserved)
+     Self-Destruct + Easter eggs
      ============================================ */
   .destruct-container {
     display: inline-flex;
@@ -1198,7 +1230,7 @@
     gap: 0.4rem;
     margin-left: 0.5rem;
     position: relative;
-    z-index: 1;
+    z-index: 2;
   }
   .destruct-text {
     font-size: 0.7rem;
@@ -1304,7 +1336,6 @@
     100% { transform: translate(0,0); }
   }
 
-  /* Floating components glow */
   .normal-floating {
     filter: drop-shadow(0 0 14px rgba(255, 162, 0, 0.5));
     transition: filter 0.3s ease;
@@ -1325,7 +1356,6 @@
     filter: drop-shadow(0 0 15px rgba(255, 255, 255, 0.35));
   }
 
-  /* Component modal */
   .component-modal-overlay {
     position: fixed;
     top: 0; left: 0;
@@ -1337,6 +1367,7 @@
     z-index: 9999;
     backdrop-filter: blur(20px) saturate(180%);
     -webkit-backdrop-filter: blur(20px) saturate(180%);
+    pointer-events: auto;
   }
   .component-modal-overlay.active {
     display: flex;
@@ -1383,7 +1414,7 @@
     overflow-y: auto;
     max-height: 70vh;
     padding-right: 0.5rem;
-    position: relative; z-index: 1;
+    position: relative; z-index: 2;
   }
   .modal-content h2 { font-size: 1.6rem; margin-bottom: 0.75rem; letter-spacing: -0.02em; }
   .modal-content p { color: var(--text-secondary); line-height: 1.6; }
@@ -1405,7 +1436,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    z-index: 2;
+    z-index: 10;
     transition: transform 0.2s;
   }
   .modal-close:hover { transform: scale(1.1); }
@@ -1422,9 +1453,6 @@
     .modal-image-container { min-width: auto; }
   }
 
-  /* ============================================
-     Responsive nav
-     ============================================ */
   @media (max-width: 768px) {
     .navbar { top: 8px; width: calc(100% - 16px); border-radius: 22px; }
     .nav-container { flex-direction: column; align-items: stretch; gap: 0.5rem; padding: 0 0.5rem; }
@@ -1436,6 +1464,15 @@
     .typing-text { font-size: 1.1rem; }
     .section-title { font-size: 1.7rem; }
   }
+
+  /* ============================================
+     Scrollable areas need pointer-events for scrolling.
+     We use a JS approach for the scroll containers.
+     ============================================ */
+  .cards-grid.scrollable,
+  .projects-scroll-container.scrollable {
+    pointer-events: auto;
+  }
 </style>
 
 <svg style="position: absolute; width: 0; height: 0;" aria-hidden="true">
@@ -1446,13 +1483,9 @@
 
 </head>
 <body>
-<!-- Star field canvas -->
 <canvas id="starCanvas"></canvas>
-
-<!-- Floating electronic components -->
 <div id="floatingComponents"></div>
 
-<!-- Navigation -->
 <nav class="navbar">
   <div class="nav-container">
     <div class="nav-links">
@@ -1530,7 +1563,6 @@
   </div>
 </nav>
 
-<!-- Hero Section -->
 <section id="home" class="hero">
   <div class="profile-container">
     <div class="profile-image-container">
@@ -1580,43 +1612,30 @@
 </section>
 
 <div class="container">
-  <!-- Education Section — rendered by renderEducation() -->
   <section id="education" class="section">
     <h2 class="section-title">Education</h2>
-    <div class="timeline" id="educationTimeline">
-      <!-- Education cards injected here by JavaScript -->
-    </div>
+    <div class="timeline" id="educationTimeline"></div>
   </section>
 
-  <!-- Experience Section — rendered by renderExperience() -->
   <section id="experience" class="section">
     <h2 class="section-title">Work Experience</h2>
-    <div class="cards-grid">
-      <div class="cards-container" id="experienceCards">
-        <!-- Experience cards injected here by JavaScript -->
-      </div>
+    <div class="cards-grid" id="cardsGrid">
+      <div class="cards-container" id="experienceCards"></div>
     </div>
   </section>
 
-  <!-- Projects Section — rendered by renderProjects() -->
   <section id="projects" class="section">
     <h2 class="section-title">Projects</h2>
-    <div class="projects-scroll-container">
-      <div class="projects-grid" id="projectsGrid">
-        <!-- Project cards injected here by JavaScript -->
-      </div>
+    <div class="projects-scroll-container" id="projectsScrollContainer">
+      <div class="projects-grid" id="projectsGrid"></div>
     </div>
   </section>
 
-  <!-- Skills Section — rendered by renderSkills() -->
   <section id="skills" class="section">
     <h2 class="section-title">Technical Skills</h2>
-    <div class="skills-grid" id="skillsContainer">
-      <!-- Skill tags injected here by JavaScript -->
-    </div>
+    <div class="skills-grid" id="skillsContainer"></div>
   </section>
 
-  <!-- Contact Section -->
   <section id="contact" class="section">
     <h2 class="section-title">Contact Me</h2>
     <div class="contact-form">
@@ -1647,9 +1666,8 @@
   </section>
 </div>
 
-<!-- Footer -->
 <footer class="footer">
- <p>&copy; 2024 OUSSAMA AK-HAIL | Electrical Engineer | Email: <a href="&#109;&#97;&#105;&#108;&#116;&#111;&#58;&#97;&#107;&#46;&#111;&#117;&#115;&#115;&#97;&#109;&#97;&#49;&#54;&#48;&#52;&#64;&#103;&#109;&#97;&#105;&#108;&#46;&#99;&#111;&#109;">&#97;&#107;&#46;&#111;&#117;&#115;&#115;&#97;&#109;&#97;&#49;&#54;&#48;&#52;&#64;&#103;&#109;&#97;&#105;&#108;&#46;&#99;&#111;&#109;</a> | Phone: 0609907353</p>
+   <p>&copy; 2024 OUSSAMA AK-HAIL | Electrical Engineer | Email: <a href="&#109;&#97;&#105;&#108;&#116;&#111;&#58;&#97;&#107;&#46;&#111;&#117;&#115;&#115;&#97;&#109;&#97;&#49;&#54;&#48;&#52;&#64;&#103;&#109;&#97;&#105;&#108;&#46;&#99;&#111;&#109;">&#97;&#107;&#46;&#111;&#117;&#115;&#115;&#97;&#109;&#97;&#49;&#54;&#48;&#52;&#64;&#103;&#109;&#97;&#105;&#108;&#46;&#99;&#111;&#109;</a> | Phone: 0609907353</p>
   <span class="destruct-container">
     <span class="destruct-text">DON'T CLICK!</span>
     <svg id="destructBtn" class="destruct-icon" viewBox="0 0 100 100" width="20" height="20">
@@ -1659,29 +1677,17 @@
   </span>
 </footer>
 
-<!-- Back to top button -->
 <div class="back-to-top" id="backToTop">
   <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
     <path d="M12 19V5M5 12l7-7 7 7"/>
   </svg>
 </div>
 
-<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script>
 <script>
   (function() {
     emailjs.init("bnq6VTyL43ZGNb5Bs");
   })();
 
-  // ============================================================
-  // DATA CONFIGURATION — ADD NEW ITEMS BY COPY-PASTING BLOCKS
-  // ============================================================
-
-  /*
-    To add a new EDUCATION entry:
-    1. Copy a block below (from { to },)
-    2. Paste it before the closing ]
-    3. Change the values
-  */
   const educationData = [
     {
       logo: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/fstt-YBiT0jj4TSd0mXLkMFt8mV5FqTwkl6.png",
@@ -1716,52 +1722,29 @@
         "Automation, Augmented Reality"
       ]
     }
-    // <-- Add new education entries here (copy a block above and paste)
   ];
 
-  /*
-    To add a new EXPERIENCE entry:
-    1. Copy a block below (from { to },)
-    2. Paste it before the closing ]
-    3. Change the values
-    4. For descriptionHTML: use <li> items for bullet points
-  */
   const experienceData = [
     {
       logo: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/orange-BDb5113mOo7jH9YElrLB2Vz0PtzOe1.png",
       company: "Orange Digital Center",
       role: "Autoguided Telescope Project",
       date: "Jul 2024 - Aug 2024",
-      descriptionHTML: `<ul>
-        <li>Developed an autoguided Dobsonian telescope from scratch with celestial tracking capabilities</li>
-        <li>Implemented three operating modes:
-          <ul>
-            <li><strong>Online Mode</strong></li>
-            <li><strong>Catalog Mode</strong></li>
-            <li><strong>Manual Mode</strong></li>
-          </ul>
-        </li>
-      </ul>`
+      descriptionHTML: `<ul><li>Developed an autoguided Dobsonian telescope from scratch with celestial tracking capabilities</li><li>Implemented three operating modes:<ul><li><strong>Online Mode</strong></li><li><strong>Catalog Mode</strong></li><li><strong>Manual Mode</strong></li></ul></li></ul>`
     },
     {
       logo: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/robo-aDk3yXczoT7Q4DxeCY3XIkcceXhKHo.png",
       company: "RoboTech FSTT",
       role: "Technical Unit",
       date: "Oct 2023 - Present",
-      descriptionHTML: `<ul>
-        <li>Worked on technical projects related to robotics and automation.</li>
-        <li>Developed solutions involving embedded systems and electronics.</li>
-      </ul>`
+      descriptionHTML: `<ul><li>Worked on technical projects related to robotics and automation.</li><li>Developed solutions involving embedded systems and electronics.</li></ul>`
     },
     {
       logo: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/robo-aDk3yXczoT7Q4DxeCY3XIkcceXhKHo.png",
       company: "RoboTech FSTT",
       role: "Media Manager",
       date: "Apr 2024 - Oct 2024",
-      descriptionHTML: `<ul>
-        <li>Created media content and tutorials to simplify complex technical concepts.</li>
-        <li>Managed digital communication and engagement strategies.</li>
-      </ul>`
+      descriptionHTML: `<ul><li>Created media content and tutorials to simplify complex technical concepts.</li><li>Managed digital communication and engagement strategies.</li></ul>`
     },
     {
       logo: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/gl-MhejMraRokejDoXfU2SWjBtxWKSiMM.png",
@@ -1775,41 +1758,24 @@
       company: "Belhassan - HSB",
       role: "Automatician",
       date: "Apr 2023 - May 2023",
-      descriptionHTML: `<ul>
-        <li>Automated and supervised a reverse osmosis system.</li>
-        <li>Improved system performance through engineering solutions.</li>
-      </ul>`
+      descriptionHTML: `<ul><li>Automated and supervised a reverse osmosis system.</li><li>Improved system performance through engineering solutions.</li></ul>`
     },
     {
       logo: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/agri-IcPUYCGkj4jjkpTSSI0U0iG3iUhasK.png",
       company: "AGRI 4.0",
       role: "Electronic Technician",
       date: "Apr 2022 - May 2022",
-      descriptionHTML: `<ul>
-        <li>Designed a GSM-based Smart Irrigation system.</li>
-        <li>Developed a Modbus RTU configuration and monitoring software.</li>
-      </ul>`
+      descriptionHTML: `<ul><li>Designed a GSM-based Smart Irrigation system.</li><li>Developed a Modbus RTU configuration and monitoring software.</li></ul>`
     },
     {
       logo: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/sews-Qmw2GMrN4sam2H67k8cdPnMQ65GE5J.png",
       company: "SEWS Maroc",
       role: "Maintenance Technician",
       date: "Aug 2021",
-      descriptionHTML: `<ul>
-        <li>Conducted maintenance on industrial equipment.</li>
-        <li>Gained hands-on experience in troubleshooting and repair.</li>
-      </ul>`
+      descriptionHTML: `<ul><li>Conducted maintenance on industrial equipment.</li><li>Gained hands-on experience in troubleshooting and repair.</li></ul>`
     }
-    // <-- Add new experience entries here (copy a block above and paste)
   ];
 
-  /*
-    To add a new PROJECT entry:
-    1. Copy a block below (from { to },)
-    2. Paste it before the closing ]
-    3. Change the values
-    4. link is optional — leave empty "" if no link
-  */
   const projectsData = [
     {
       image: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/telescopel.jpg-fkNyTsDyB4yO0l9YffFPuo7eurUzaZ.jpeg",
@@ -1818,12 +1784,7 @@
       date: "Jul 2024 - Aug 2024",
       link: "https://www.instructables.com/Autoguided-Telescope/",
       linkText: "View detailed guide on Instructables",
-      descriptionHTML: `<p>Developed an autoguided Dobsonian telescope with a motorized mount for precise celestial tracking. The system includes three operating modes:</p>
-        <ul>
-          <li><strong>Online Mode:</strong> Computes altitude and azimuth using sidereal time for accurate tracking.</li>
-          <li><strong>Offline Mode:</strong> Offers a list of 20 preloaded celestial objects for easy observation without external data.</li>
-          <li><strong>Manual Mode:</strong> Provides direct user control for personalized exploration.</li>
-        </ul>`
+      descriptionHTML: `<p>Developed an autoguided Dobsonian telescope with a motorized mount for precise celestial tracking. The system includes three operating modes:</p><ul><li><strong>Online Mode:</strong> Computes altitude and azimuth using sidereal time for accurate tracking.</li><li><strong>Offline Mode:</strong> Offers a list of 20 preloaded celestial objects for easy observation without external data.</li><li><strong>Manual Mode:</strong> Provides direct user control for personalized exploration.</li></ul>`
     },
     {
       image: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/datalog-D4G4JxQfywLoirJ7HkpNOTepZhqNjd.png",
@@ -1832,13 +1793,7 @@
       date: "Apr 2022 - Jun 2022",
       link: "",
       linkText: "",
-      descriptionHTML: `<ul>
-          <li>Developed a GSM-based smart irrigation system that enables remote and automated water management using the Modbus RTU protocol.</li>
-          <li>Reverse-engineered a data logger's Modbus registers using Modbus Poll and official software to extract sensor readings and send control signals.</li>
-          <li>Created a custom GUI in Python (Tkinter and PySerial) for easy system monitoring and configuration.</li>
-          <li>Programmed an Arduino to handle AT commands for SMS communication and implemented a CRC-based error detection system over RS485.</li>
-          <li>Integrated safety features, including water flow sensors and an SMS alert system to detect failures and notify users.</li>
-        </ul>`
+      descriptionHTML: `<ul><li>Developed a GSM-based smart irrigation system that enables remote and automated water management using the Modbus RTU protocol.</li><li>Reverse-engineered a data logger's Modbus registers using Modbus Poll and official software to extract sensor readings and send control signals.</li><li>Created a custom GUI in Python (Tkinter and PySerial) for easy system monitoring and configuration.</li><li>Programmed an Arduino to handle AT commands for SMS communication and implemented a CRC-based error detection system over RS485.</li><li>Integrated safety features, including water flow sensors and an SMS alert system to detect failures and notify users.</li></ul>`
     },
     {
       image: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/tri-p52tZr1qDuwGx7JP79PXiiZLjbFcc2.png",
@@ -1847,18 +1802,10 @@
       date: "Nov 2021 - Apr 2022",
       link: "",
       linkText: "",
-      descriptionHTML: `<ul>
-          <li>Designed a sorting machine using artificial intelligence to classify fresh and rotten apples.</li>
-          <li>Integrated Augmented Reality (AR) for supervision, enabling users to monitor and interact with the system.</li>
-          <li>Used Modbus TCP/IP for real-time machine control and data transmission.</li>
-        </ul>`
+      descriptionHTML: `<ul><li>Designed a sorting machine using artificial intelligence to classify fresh and rotten apples.</li><li>Integrated Augmented Reality (AR) for supervision, enabling users to monitor and interact with the system.</li><li>Used Modbus TCP/IP for real-time machine control and data transmission.</li></ul>`
     }
-    // <-- Add new project entries here (copy a block above and paste)
   ];
 
-  /*
-    To add a new SKILL: just add a new string to the array below
-  */
   const skillsData = [
     "Modbus RTU", "Tkinter", "Computer-Aided Design (CAD)", "Onshape",
     "Schneider Unity Pro", "Schneider SoMachine", "Allen Bradley RSLogix 5000",
@@ -1870,22 +1817,16 @@
     "Graphical User Interface (GUI)", "Global System for Mobile Communications (GSM)",
     "MQTT", "Citect", "Python (Programming Language)", "Internet of Things (IoT)",
     "Artificial Intelligence (AI)", "Augmented Reality (AR)", "Electrical Engineering"
-    // <-- Add new skills here as strings
   ];
 
-  // ============================================================
-  // FLOATING COMPONENTS DATA — ADD NEW FLOATING ITEMS HERE
-  // ============================================================
   const specialComponents = [
     {
-      src: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/image-7k7xvTCIR1VDsBvIX3WXdrnXF6UuAx.png", // Resistor
-      width: 60, height: 20,
-      class: 'normal-floating'
+      src: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/image-7k7xvTCIR1VDsBvIX3WXdrnXF6UuAx.png",
+      width: 60, height: 20, class: 'normal-floating'
     },
     {
-      src: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/image-removebg-preview%20%282%29-6IejiMoENsw8nCxw8ummSWDeIJ3NPz.png", // disk
-      width: 55, height: 55,
-      class: 'normal-floating',
+      src: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/image-removebg-preview%20%282%29-6IejiMoENsw8nCxw8ummSWDeIJ3NPz.png",
+      width: 55, height: 55, class: 'normal-floating',
       modalInfo: {
         title: "Storage Disk",
         description: "/n ERROR 404: Common Sense Not Found. Restart your brain and try again, or maybe do what it says...",
@@ -1893,93 +1834,79 @@
       }
     },
     {
-      src: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/image-removebg-preview%20%283%29%20%281%29-4ZGwuavTZAc6z9Z6Gb22MwSllOWl2M.png", // pizza
-      width: 80, height: 80,
-      class: 'normal-floating',
+      src: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/image-removebg-preview%20%283%29%20%281%29-4ZGwuavTZAc6z9Z6Gb22MwSllOWl2M.png",
+      width: 80, height: 80, class: 'normal-floating',
       modalInfo: {
         title: "Floating Slice of Pizza",
         description: "Congratulations! You found the lost pizza from Apollo 11. Too bad it's still out of reach."
       }
     },
     {
-      src: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/image-UgwK25EAOClOHsTDKMR7YltP66Xz1s.png", // screw
-      width: 80, height: 36,
-      class: 'normal-floating'
+      src: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/image-UgwK25EAOClOHsTDKMR7YltP66Xz1s.png",
+      width: 80, height: 36, class: 'normal-floating'
     },
     {
-      src: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/image-SdaJeaKobIfA0INVlpm9qWHQ1v1JGo.png", // glasses
-      width: 100, height: 100,
-      class: 'glove-special'
+      src: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/image-SdaJeaKobIfA0INVlpm9qWHQ1v1JGo.png",
+      width: 100, height: 100, class: 'glove-special'
     },
     {
-      src: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/image-2ApdMxwqoPxxMv71VZ2UnyGrV6p0LK.png", // Raspberry Pi
-      width: 95, height: 95,
-      class: 'normal-floating'
+      src: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/image-2ApdMxwqoPxxMv71VZ2UnyGrV6p0LK.png",
+      width: 95, height: 95, class: 'normal-floating'
     },
     {
-      src: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/image-bVPnyrUOLq4Suv28ok3AvdqeJhiDHx.png", // Arduino/blue board
-      width: 80, height: 80,
-      class: 'normal-floating'
+      src: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/image-bVPnyrUOLq4Suv28ok3AvdqeJhiDHx.png",
+      width: 80, height: 80, class: 'normal-floating'
     },
     {
-      src: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/image-bVPnyrUOLq4Suv28ok3AvdqeJhiDHx.png", // Arduino/blue board duplicate
-      width: 80, height: 80,
-      class: 'normal-floating'
+      src: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/image-bVPnyrUOLq4Suv28ok3AvdqeJhiDHx.png",
+      width: 80, height: 80, class: 'normal-floating'
     },
     {
-      src: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/image-removebg-preview%20%284%29-ioUveaiu9zutE3474jvTsCkdU0I0eO.png", // duck
-      width: 100, height: 56,
-      class: 'glove-special',
+      src: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/image-removebg-preview%20%284%29-ioUveaiu9zutE3474jvTsCkdU0I0eO.png",
+      width: 100, height: 56, class: 'glove-special',
       modalInfo: {
         title: "Mr. Quackstronaut",
         description: "Congratulations! You have just discovered the rare Quackstronaut! Unfortunately, it does absolutely nothing. But hey, at least now you can say you've clicked on a duck in space."
       }
     },
     {
-      src: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/image-MpUhBXrAOAQBo3bIHMEs0pDD7Wb1dt.png", // Motherboard/circuit
-      width: 110, height: 110,
-      class: 'normal-floating'
+      src: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/image-MpUhBXrAOAQBo3bIHMEs0pDD7Wb1dt.png",
+      width: 110, height: 110, class: 'normal-floating'
     },
     {
-      src: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/image-kAjN722F3XyCnloNgQLdY4bS6cOsG8.png", // glove
-      width: 120, height: 120,
-      class: 'glove-special',
+      src: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/image-kAjN722F3XyCnloNgQLdY4bS6cOsG8.png",
+      width: 120, height: 120, class: 'glove-special',
       modalInfo: {
         title: "WARNING: May Contain Astronaut Hand",
         description: "Legend says this glove belonged to the first astronaut who tried to high-five an alien... It didn't end well, good luck finding the rest of the Astronaut :)"
       }
     },
     {
-      src: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/image-hly7J5OfcKguXPRpLDWSYRCowCJPNA.png", // telescope
-      width: 447, height: 557,
-      class: 'glove-special',
+      src: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/image-hly7J5OfcKguXPRpLDWSYRCowCJPNA.png",
+      width: 447, height: 557, class: 'glove-special',
       modalInfo: {
         title: "AK-SCOPE",
         description: "Behold! The Universe... in HD (Well, Sort of)"
       }
     },
     {
-      src: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/image-W7Y5E4DlTeVXRkdgmDLxHfJKFS7gDr.png", // motor
-      width: 90, height: 90,
-      class: 'normal-floating'
+      src: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/image-W7Y5E4DlTeVXRkdgmDLxHfJKFS7gDr.png",
+      width: 90, height: 90, class: 'normal-floating'
     },
     {
-      src: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/image-ZSVPF5ZpbF2JKLEAdNywNcDKbDtNuG.png", // vintage telescope
-      width: 80, height: 80,
-      class: 'normal-floating',
+      src: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/image-ZSVPF5ZpbF2JKLEAdNywNcDKbDtNuG.png",
+      width: 80, height: 80, class: 'normal-floating',
       modalInfo: {
         title: "The Forgotten Telescope",
         description: `NASA Rejected This Design... For Obvious Reasons. but hey you can buy one from here : <a class="pizza-link" href="https://ak-space-technologie-store.vercel.app/" target="_blank" rel="noopener noreferrer">AK-space technologie store</a>`
       }
     }
-    // <-- Add new floating components here (copy a block above and paste)
   ];
 
-  // Empty array for random floating components (not clickable)
   const componentImages = [];
 
   // ============================================================
-  // RENDER FUNCTIONS — Generate HTML from data arrays
+  // RENDER FUNCTIONS
   // ============================================================
 
   function renderEducation() {
@@ -2055,13 +1982,68 @@
   }
 
   // ============================================================
-  // FIXED FLOATING COMPONENTS
-  // All components stay at z-index: -5 (behind content).
-  // Clickable components use document-level click detection
-  // so they remain clickable without covering text.
+  // SCROLL CONTAINER FIX
+  // Enable pointer-events on scroll containers only while
+  // the mouse is hovering over a card inside them, or while
+  // actively scrolling. This allows horizontal scroll to work
+  // while keeping empty areas transparent to clicks.
   // ============================================================
+  function initScrollContainerFix() {
+    const scrollContainers = [
+      document.getElementById('cardsGrid'),
+      document.getElementById('projectsScrollContainer')
+    ];
 
-  // Store clickable component data for document-level click detection
+    scrollContainers.forEach(container => {
+      if (!container) return;
+
+      let scrollTimeout;
+
+      // Enable pointer-events when mouse enters a card (child element)
+      container.addEventListener('mouseover', (e) => {
+        const card = e.target.closest('.card, .project-card');
+        if (card) {
+          container.style.pointerEvents = 'auto';
+        }
+      });
+
+      // Disable pointer-events when mouse leaves a card but stays in container empty space
+      container.addEventListener('mouseout', (e) => {
+        const card = e.target.closest('.card, .project-card');
+        const relatedCard = e.relatedTarget && e.relatedTarget.closest('.card, .project-card');
+        // Only disable if we're leaving a card and NOT entering another card
+        if (card && !relatedCard) {
+          // Small delay to allow scroll to start
+          setTimeout(() => {
+            container.style.pointerEvents = '';
+          }, 50);
+        }
+      });
+
+      // Enable pointer-events when user initiates a scroll (wheel event)
+      container.addEventListener('wheel', (e) => {
+        container.style.pointerEvents = 'auto';
+        clearTimeout(scrollTimeout);
+        scrollTimeout = setTimeout(() => {
+          container.style.pointerEvents = '';
+        }, 500);
+      }, { passive: true });
+
+      // Touch support
+      container.addEventListener('touchstart', () => {
+        container.style.pointerEvents = 'auto';
+      }, { passive: true });
+      container.addEventListener('touchend', () => {
+        setTimeout(() => {
+          container.style.pointerEvents = '';
+        }, 500);
+      }, { passive: true });
+    });
+  }
+
+  // ============================================================
+  // FLOATING COMPONENTS
+  // ============================================================
   let clickableComponentData = [];
 
   function showComponentModal(componentData) {
@@ -2098,18 +2080,6 @@
     const container = document.getElementById('floatingComponents');
     clickableComponentData = [];
 
-    // On mobile (narrow screens), use a virtual canvas that is wider/taller
-    // than the viewport so components are spread out and only a few are visible
-    // at any time — the rest drift in from off-screen.
-    const isMobile = window.innerWidth <= 768;
-    const virtualW = isMobile ? window.innerWidth  * 3.5 : window.innerWidth;
-    const virtualH = isMobile ? window.innerHeight * 3.5 : window.innerHeight;
-    // Offset so components can start anywhere in the virtual space
-    // (including well outside the visible area in all directions)
-    const offsetX = isMobile ? -(virtualW - window.innerWidth)  / 2 : 0;
-    const offsetY = isMobile ? -(virtualH - window.innerHeight) / 2 : 0;
-
-    // Create shuffled random components
     const shuffledComponents = [...componentImages];
     for (let i = shuffledComponents.length - 1; i > 0; i--) {
       const j = Math.floor(Math.random() * (i + 1));
@@ -2122,22 +2092,15 @@
       img.height = randomComponent.height;
       img.className = 'floating-component';
       img.alt = "Electronic component";
-      const randomX = offsetX + Math.random() * virtualW;
-      const randomY = offsetY + Math.random() * virtualH;
-      const speedX = (Math.random() - 0.5) * 0.5;
-      const speedY = (Math.random() - 0.5) * 0.5;
-      const rotationSpeed = (Math.random() - 0.5) * 1;
-      img.style.left = `${randomX}px`;
-      img.style.top = `${randomY}px`;
-      img.style.transform = `rotate(${Math.random() * 360}deg)`;
-      img.dataset.speedX = speedX;
-      img.dataset.speedY = speedY;
+      img.style.left = `${Math.random() * window.innerWidth}px`;
+      img.style.top = `${Math.random() * window.innerHeight}px`;
+      img.dataset.speedX = (Math.random() - 0.5) * 0.5;
+      img.dataset.speedY = (Math.random() - 0.5) * 0.5;
       img.dataset.rotation = Math.random() * 360;
-      img.dataset.rotationSpeed = rotationSpeed;
+      img.dataset.rotationSpeed = (Math.random() - 0.5) * 1;
       container.appendChild(img);
     });
 
-    // Create special components (clickable)
     specialComponents.forEach((component, index) => {
       const img = document.createElement('img');
       img.src = component.src;
@@ -2146,16 +2109,13 @@
       img.className = `floating-component ${component.class || ''}`;
       img.alt = "Special component";
 
-      // Add clickable class + store data for document click detection
       if (component.modalInfo) {
         img.classList.add('clickable-component');
         img.dataset.clickableId = index;
       }
 
-      const spawnX = offsetX + Math.random() * virtualW;
-      const spawnY = offsetY + Math.random() * virtualH;
-      img.style.left = `${spawnX}px`;
-      img.style.top = `${spawnY}px`;
+      img.style.left = `${Math.random() * window.innerWidth}px`;
+      img.style.top = `${Math.random() * window.innerHeight}px`;
       img.dataset.speedX = (Math.random() - 0.5) * 0.5;
       img.dataset.speedY = (Math.random() - 0.5) * 0.5;
       img.dataset.rotationSpeed = (Math.random() - 0.5) * 1;
@@ -2165,43 +2125,26 @@
 
       container.appendChild(img);
 
-      // Store for document-level click detection
       if (component.modalInfo) {
         clickableComponentData.push({ element: img, data: component });
       }
     });
   }
 
-  // Document-level click detection for clickable floating components
-  // This allows components to stay BEHIND content (z-index: -5)
-  // while still being clickable ONLY when nothing interactive is above them
   function initFloatingClickDetection() {
     document.addEventListener('click', (e) => {
-      // Only process if no modal is open
       if (document.querySelector('.component-modal-overlay')) return;
-
-      // If the user clicked on any real interactive / visible UI element, bail out.
-      // We walk up the DOM from the actual target and stop as soon as we find
-      // something that has a positive z-index or is a known interactive tag.
-      const interactiveTags = new Set(['A', 'BUTTON', 'INPUT', 'TEXTAREA', 'SELECT', 'LABEL', 'FORM', 'NAV']);
-      let node = e.target;
-      while (node && node !== document.body) {
-        // If the clicked node itself is interactive → ignore
-        if (interactiveTags.has(node.tagName)) return;
-
-        // If the node has a computed z-index above 0 it is "real" foreground content
-        const zIndex = parseInt(window.getComputedStyle(node).zIndex, 10);
-        if (!isNaN(zIndex) && zIndex > 0) return;
-
-        node = node.parentElement;
-      }
 
       const clickX = e.clientX;
       const clickY = e.clientY;
 
+      const allFloating = document.querySelectorAll('.floating-component');
+      allFloating.forEach(el => el.style.pointerEvents = 'auto');
+      const topElement = document.elementFromPoint(clickX, clickY);
+      allFloating.forEach(el => el.style.pointerEvents = 'none');
+
       for (const item of clickableComponentData) {
         const rect = item.element.getBoundingClientRect();
-        // Check if click is within the component's bounding box (with small padding)
         const padding = 5;
         if (
           clickX >= rect.left - padding &&
@@ -2209,8 +2152,10 @@
           clickY >= rect.top - padding &&
           clickY <= rect.bottom + padding
         ) {
-          showComponentModal(item.data);
-          break;
+          if (topElement && (topElement === item.element || item.element.contains(topElement))) {
+            showComponentModal(item.data);
+            break;
+          }
         }
       }
     });
@@ -2218,14 +2163,6 @@
 
   function animateFloatingComponents() {
     const components = document.querySelectorAll('.floating-component');
-    // On mobile use an expanded virtual boundary so components
-    // wrap around a larger space and only a few are on-screen at once
-    const isMobile = window.innerWidth <= 768;
-    const boundW = isMobile ? window.innerWidth  * 3.5 : window.innerWidth;
-    const boundH = isMobile ? window.innerHeight * 3.5 : window.innerHeight;
-    const minX   = isMobile ? -(boundW - window.innerWidth)  / 2 : 0;
-    const minY   = isMobile ? -(boundH - window.innerHeight) / 2 : 0;
-
     components.forEach(component => {
       let x = parseFloat(component.style.left);
       let y = parseFloat(component.style.top);
@@ -2233,15 +2170,10 @@
       x += parseFloat(component.dataset.speedX);
       y += parseFloat(component.dataset.speedY);
       rotation += parseFloat(component.dataset.rotationSpeed);
-
-      const w = component.width  || 50;
-      const h = component.height || 50;
-
-      if (x < minX - w)       x = minX + boundW;
-      if (x > minX + boundW)  x = minX - w;
-      if (y < minY - h)       y = minY + boundH;
-      if (y > minY + boundH)  y = minY - h;
-
+      if (x < -component.width) x = window.innerWidth;
+      if (x > window.innerWidth) x = -component.width;
+      if (y < -component.height) y = window.innerHeight;
+      if (y > window.innerHeight) y = -component.height;
       component.style.left = `${x}px`;
       component.style.top = `${y}px`;
       component.style.transform = `rotate(${rotation}deg)`;
@@ -2250,7 +2182,6 @@
     requestAnimationFrame(animateFloatingComponents);
   }
 
-  // Theme toggle
   function initThemeToggle() {
     const themeToggle = document.getElementById('themeToggle');
     const htmlElement = document.documentElement;
@@ -2269,7 +2200,6 @@
     });
   }
 
-  // Star field
   function initStarField() {
     const canvas = document.getElementById('starCanvas');
     const ctx = canvas.getContext('2d');
@@ -2282,17 +2212,10 @@
     const stars = [];
     const starCount = 300;
     const maxDepth = 1000;
-    const darkModeStarColors = [
-      'rgba(255, 255, 255, 0.8)',
-      'rgba(0, 255, 255, 0.8)'
-    ];
+    const darkModeStarColors = ['rgba(255,255,255,0.8)', 'rgba(0,255,255,0.8)'];
     const lightModeStarColors = [
-      'rgba(0, 0, 0, 0.8)',
-      'rgba(128, 0, 128, 0.8)',
-      'rgba(0, 128, 128, 0.8)',
-      'rgba(0, 100, 0, 0.8)',
-      'rgba(128, 0, 0, 0.8)',
-      'rgba(128, 64, 0, 0.8)'
+      'rgba(0,0,0,0.8)', 'rgba(128,0,128,0.8)', 'rgba(0,128,128,0.8)',
+      'rgba(0,100,0,0.8)', 'rgba(128,0,0,0.8)', 'rgba(128,64,0,0.8)'
     ];
     function initStars(isDark) {
       stars.length = 0;
@@ -2307,11 +2230,10 @@
         });
       }
     }
-    const isDarkMode = document.documentElement.classList.contains('dark');
-    initStars(isDarkMode);
+    initStars(document.documentElement.classList.contains('dark'));
     function animate() {
       const isDark = document.documentElement.classList.contains('dark');
-      ctx.fillStyle = isDark ? "rgba(0, 0, 0, 0.2)" : "rgba(248, 249, 250, 0.2)";
+      ctx.fillStyle = isDark ? "rgba(0,0,0,0.2)" : "rgba(248,249,250,0.2)";
       ctx.fillRect(0, 0, canvas.width, canvas.height);
       const centerX = canvas.width / 2;
       const centerY = canvas.height / 2;
@@ -2337,48 +2259,33 @@
       requestAnimationFrame(animate);
     }
     animate();
-    window.updateStarField = function(theme) {
-      initStars(theme === 'dark');
-    };
+    window.updateStarField = function(theme) { initStars(theme === 'dark'); };
   }
 
-  // Back to top
   function initBackToTop() {
     const backToTopButton = document.getElementById('backToTop');
     window.addEventListener('scroll', () => {
-      if (window.scrollY > 300) {
-        backToTopButton.classList.add('visible');
-      } else {
-        backToTopButton.classList.remove('visible');
-      }
+      backToTopButton.classList.toggle('visible', window.scrollY > 300);
     });
     backToTopButton.addEventListener('click', () => {
       window.scrollTo({ top: 0, behavior: 'smooth' });
     });
   }
 
-  // Scroll spy
   function initScrollSpy() {
     const sections = document.querySelectorAll('.section');
     const navLinks = document.querySelectorAll('.nav-link');
     window.addEventListener('scroll', () => {
       let current = '';
       sections.forEach(section => {
-        const sectionTop = section.offsetTop;
-        if (window.scrollY >= sectionTop - 300) {
-          current = section.getAttribute('id');
-        }
+        if (window.scrollY >= section.offsetTop - 300) current = section.getAttribute('id');
       });
       navLinks.forEach(link => {
-        link.classList.remove('active');
-        if (link.getAttribute('href').substring(1) === current) {
-          link.classList.add('active');
-        }
+        link.classList.toggle('active', link.getAttribute('href').substring(1) === current);
       });
     });
   }
 
-  // Contact form
   function initContactForm() {
     const contactForm = document.getElementById('contactForm');
     const nameInput = document.getElementById('name');
@@ -2411,7 +2318,7 @@
           message: messageInput.value.trim()
         };
         emailjs.send('service_lgrhfx7', 'template_6vgs6df', templateParams)
-          .then(function(response) {
+          .then(function() {
             formLoading.style.display = 'none';
             successMessage.style.display = 'block';
             contactForm.reset();
@@ -2425,27 +2332,21 @@
     });
   }
 
-  // Resize handler
   function handleResize() {
     const components = document.querySelectorAll('.floating-component');
-    const windowWidth = window.innerWidth;
-    const windowHeight = window.innerHeight;
     components.forEach(component => {
       let x = parseFloat(component.style.left);
       let y = parseFloat(component.style.top);
-      if (x > windowWidth) component.style.left = `${windowWidth - component.width}px`;
-      if (y > windowHeight) component.style.top = `${windowHeight - component.height}px`;
+      if (x > window.innerWidth) component.style.left = `${window.innerWidth - component.width}px`;
+      if (y > window.innerHeight) component.style.top = `${window.innerHeight - component.height}px`;
     });
   }
 
-  // Normalize card heights
   function normalizeCardHeights() {
     const cards = document.querySelectorAll('.card');
     let maxHeight = 0;
     cards.forEach(card => { card.style.height = 'auto'; });
-    cards.forEach(card => {
-      maxHeight = Math.max(maxHeight, card.offsetHeight);
-    });
+    cards.forEach(card => { maxHeight = Math.max(maxHeight, card.offsetHeight); });
     cards.forEach(card => { card.style.height = `${maxHeight}px`; });
   }
 
@@ -2457,7 +2358,6 @@
     projectCards.forEach(card => { card.style.height = `${maxHeight}px`; });
   }
 
-  // Self-destruct hover fix for cards
   function initCardHoverFix() {
     document.querySelectorAll('.card').forEach(card => {
       card.addEventListener('mouseenter', () => {
@@ -2471,7 +2371,7 @@
   }
 
   // ============================================================
-  // Self-Destruct Easter Egg (preserved)
+  // Self-Destruct Easter Egg
   // ============================================================
   const destructBtn = document.getElementById('destructBtn');
   const countdownOverlay = document.createElement('div');
@@ -2521,20 +2421,13 @@
         setTimeout(() => {
           document.body.style.backgroundColor = '#000';
           document.body.innerHTML = `
-            <div id="terminal" style="
-              position: fixed; top: 0; left: 0;
-              width: 100%; height: 100%;
-              overflow: auto; background: #000;
-              padding: 2rem; box-sizing: border-box;
-              font-family: 'Courier New', monospace;
-              color: #33ff33; white-space: pre-wrap;
-            ">
+            <div id="terminal" style="position:fixed;top:0;left:0;width:100%;height:100%;overflow:auto;background:#000;padding:2rem;box-sizing:border-box;font-family:'Courier New',monospace;color:#33ff33;white-space:pre-wrap;">
                          _     I SAID DON'T CLICK YOU LITTLE ITCHY FINGERS BOY !
                         | |
                         | |===( )   ==////
                         |_|   |||  | . .|
                                ||| (  - |                  ____
-                                ||| |  /                  ||   \_
+                                ||| |  /                  ||   \\_
                                   ||||||                  ||     |
                                   ||||||               ...||__/|-"
                                   ||||||            __|________|__
@@ -2544,7 +2437,7 @@
             ------------------------|||-------------||-||------||-||-------
                                    |__>            || ||      || ||
               <pre></pre>
-              <div id="terminal-content" style="max-width: 800px; margin: 0 auto"></div>
+              <div id="terminal-content" style="max-width:800px;margin:0 auto"></div>
             </div>
           `;
           const terminalContent = document.getElementById('terminal-content');
@@ -2558,43 +2451,34 @@
             { text: '', delay: 400 },
             { text: 'This portfolio is basically a digital Kinder Surprise: break the shell, choke on the toy', delay: 350 },
             { text: 'One of the eggs leads to a SECRET GAME  solve it and more games unlock', delay: 350 },
-            { text: 'If you can\'t solve the first one, don\'t worry: the universe already gave up on you.', delay: 350 },
+            { text: "If you can't solve the first one, don't worry: the universe already gave up on you.", delay: 350 },
             { text: '', delay: 500 },
             { text: ' HINT FOR THE DISK EGG:', delay: 200 },
             { text: '      your fokin keyboard. That rectangular thing you use to Google "how to breathe"', delay: 400 },
-            { text: '  (Yes, the keys are interactive. No, mashing them like a toddler won\'t help)', delay: 400 },
+            { text: "  (Yes, the keys are interactive. No, mashing them like a toddler won't help)", delay: 400 },
             { text: '', delay: 300 },
-            { text: ' PRO TIP: If you\'re stuck, just keep clicking everything', delay: 2 },
-            { text: 'It worked for you this time... statistically you\'re due for a win', delay: 2 },
+            { text: " PRO TIP: If you're stuck, just keep clicking everything", delay: 2 },
+            { text: "It worked for you this time... statistically you're due for a win", delay: 2 },
             { text: '', delay: 20 },
             { text: '>>> END OF TRANSMISSION <<<', delay: 200 },
             { text: 'click [ctrl] + [alt] + [del] to go back', delay: 0 },
-            { text: 'it is a joke don\'t click  !!!  ', delay: 0 },
+            { text: "it is a joke don't click  !!!  ", delay: 0 },
             { text: 'HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH', delay: 0 },
             { text: 'refresh the page or click [ctrl] + [R] to go back', delay: 0 },
             { text: 'OH NO SOMEONE IS TRYING TO SHUTDOWN MY SERVER NOOO@@fj^%%$#@!!~dih', delay: 0 },
             { text: 'fdyjrxghbcnv^%%$#@!!~fcvbhjnguhgyt^%%$#@!!~xbhjnydtvgbhjnfbdvghbb', delay: 0 },
             { text: 'vbvg bfhvg^%%$#@!!~yvhfbvu5lo8 p%%$#@!!~00[989866535"{U)Y)(())}]', delay: 0 },
             { text: ' _)(*^%$#@!@#$%^*()_+_)(*^%$#@!!~)~~~~@!~~!@#$%^*()_)', delay: 0 },
-            { text: '+_)(*^%$#@!@#$%^*()_+_!~@#$#^()^^*())', delay: 0 },
-            { text: '+_)(*))(^^%$$#@!!!!~!@#$%^^%$#$%^*%^%$%*^*)', delay: 0 },
-            { text: ')(*^%#$%^*()_)($%^$%$%$##$%^*()_@@@@@@@@@@@@)', delay: 0 },
-            { text: ')(*^$$%^**************************(((((^%%$$#######1255))))))', delay: 0 }
+            { text: '+_)(*^%$#@!@#$%^*()_+_!~@#$#^()^^*())', delay: 0 }
           ];
           let currentDelay = 0;
           const style = document.createElement('style');
           style.textContent = `
             @keyframes typing { from { width: 0; opacity: 0; } to { width: 100%; opacity: 1; } }
             @keyframes blink { 50% { border-color: transparent; } }
-            .terminal-line {
-              border-right: 2px solid #33ff33; overflow: hidden;
-              white-space: nowrap; margin: 0; opacity: 0;
-              animation: typing 3s steps(40, end) forwards, blink 0.75s step-end infinite;
-            }
-            .progress-bar { display: inline-block; width: 0; overflow: hidden; vertical-align: bottom; transition: width 2s ease-out; }
+            .terminal-line { border-right: 2px solid #33ff33; overflow: hidden; white-space: nowrap; margin: 0; opacity: 0; animation: typing 3s steps(40,end) forwards, blink 0.75s step-end infinite; }
           `;
           document.head.appendChild(style);
-
           async function typeLines() {
             for (const line of lines) {
               await new Promise(resolve => {
@@ -2604,7 +2488,7 @@
                   lineElement.style.animationDelay = `${currentDelay}ms`;
                   lineElement.textContent = line.text;
                   terminalContent.appendChild(lineElement);
-                  terminal.scrollTop = terminal.scrollHeight;
+                  document.getElementById('terminal').scrollTop = document.getElementById('terminal').scrollHeight;
                   resolve();
                 }, currentDelay);
               });
@@ -2612,12 +2496,7 @@
             }
             setTimeout(() => {
               const flipTable = document.createElement('div');
-              flipTable.innerHTML = `
-                <div style="color: #ff55ff; text-align: center; margin: 2rem 0">
-                  bro just refresh the shit (\u30ce\u0CA0\u76CA\u0CA0)\u30ce\u5F61\u253B\u2501\u253B
-                </div>
-                <div style="color: #888;">serieously</div>
-              `;
+              flipTable.innerHTML = `<div style="color:#ff55ff;text-align:center;margin:2rem 0">bro just refresh the shit (\u30ce\u0CA0\u76CA\u0CA0)\u30ce\u5F61\u253B\u2501\u253B</div><div style="color:#888;">serieously</div>`;
               terminalContent.appendChild(flipTable);
             }, currentDelay);
           }
@@ -2629,15 +2508,9 @@
   });
 
   // ============================================================
-  // Konami Code Easter Egg (preserved)
+  // Konami Code Easter Egg
   // ============================================================
-  const konamiCode = [
-    'ArrowUp', 'ArrowUp',
-    'ArrowDown', 'ArrowDown',
-    'ArrowLeft', 'ArrowRight',
-    'ArrowLeft', 'ArrowRight',
-    'b', 'a'
-  ];
+  const konamiCode = ['ArrowUp','ArrowUp','ArrowDown','ArrowDown','ArrowLeft','ArrowRight','ArrowLeft','ArrowRight','b','a'];
   let konamiIndex = 0;
   document.addEventListener('keydown', (e) => {
     if (e.key === konamiCode[konamiIndex]) {
@@ -2646,11 +2519,7 @@
         konamiIndex = 0;
         const konamiEffect = document.createElement('div');
         konamiEffect.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;background-color:rgba(0,0,0,0.8);z-index:99999;display:flex;justify-content:center;align-items:center;flex-direction:column;color:#fff;font-family:monospace;font-size:2rem;text-align:center;';
-        konamiEffect.innerHTML = `
-          <div style="margin-bottom: 20px;">SECRET UNLOCKED!</div>
-          <div style="font-size: 1.5rem; margin-bottom: 30px;">Opening AK Space Technologie Store...</div>
-          <div style="font-size: 1rem;">(30 lives added to your account... just kidding)</div>
-        `;
+        konamiEffect.innerHTML = `<div style="margin-bottom:20px;">SECRET UNLOCKED!</div><div style="font-size:1.5rem;margin-bottom:30px;">Opening AK Space Technologie Store...</div><div style="font-size:1rem;">(30 lives added to your account... just kidding)</div>`;
         document.body.appendChild(konamiEffect);
         setTimeout(() => {
           window.open('https://solve-me-pls.vercel.app/', '_blank');
@@ -2666,24 +2535,22 @@
   // INITIALIZE EVERYTHING
   // ============================================================
   document.addEventListener('DOMContentLoaded', () => {
-    // Render all sections from data
     renderEducation();
     renderExperience();
     renderProjects();
     renderSkills();
 
-    // Initialize all systems
     initThemeToggle();
     initStarField();
     initBackToTop();
     initScrollSpy();
     createFloatingComponents();
     animateFloatingComponents();
-    initFloatingClickDetection(); // NEW: document-level click for floating components
+    initFloatingClickDetection();
+    initScrollContainerFix();
     initContactForm();
     initCardHoverFix();
 
-    // Normalize heights after rendering
     setTimeout(() => {
       normalizeCardHeights();
       normalizeProjectHeights();
@@ -2696,6 +2563,5 @@
     });
   });
 </script>
-<script defer src="https://static.cloudflareinsights.com/beacon.min.js/v833ccba57c9e4d2798f2e76cebdd09a11778172276447" integrity="sha512-57MDmcccJXYtNnH+ZiBwzC4jb2rvgVCEokYN+L/nLlmO8rfYT/gIpW2A569iJ/3b+0UEasghjuZH/ma3wIs/EQ==" data-cf-beacon='{"version":"2024.11.0","token":"4edd5f8ec12a48cfa682ab8261b80a79","server_timing":{"name":{"cfCacheStatus":true,"cfEdge":true,"cfExtPri":true,"cfL4":true,"cfOrigin":true,"cfSpeedBrain":true},"location_startswith":null}}' crossorigin="anonymous"></script>
 </body>
 </html>
