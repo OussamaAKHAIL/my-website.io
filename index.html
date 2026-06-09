@@ -2102,37 +2102,112 @@
 
         @media (max-width: 768px) {
             .navbar {
-                top: 8px;
-                width: calc(100% - 16px);
-                border-radius: 22px;
+                top: 10px;
+                width: calc(100% - 20px);
+                border-radius: 20px;
+                padding: 0.45rem 0.75rem;
             }
 
             .nav-container {
+                flex-direction: row;
+                align-items: center;
+                justify-content: space-between;
+                gap: 0;
+                padding: 0 0.25rem;
+            }
+
+            .menu-dots-btn {
+                display: flex;
                 flex-direction: column;
-                align-items: stretch;
-                gap: 0.5rem;
-                padding: 0 0.5rem;
+                justify-content: center;
+                align-items: center;
+                gap: 4px;
+                width: 38px;
+                height: 38px;
+                border-radius: 50%;
+                background: var(--glass-bg-strong);
+                border: 1px solid var(--glass-border);
+                cursor: pointer;
+                box-shadow: var(--glass-shadow);
+                transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+                padding: 0;
+                z-index: 1001;
+                outline: none;
+                backdrop-filter: blur(16px);
+                -webkit-backdrop-filter: blur(16px);
+            }
+
+            .menu-dots-btn:hover {
+                transform: scale(1.08);
+                background: var(--glass-bg-strong);
+                border-color: var(--accent-primary);
+            }
+
+            .menu-dots-btn.active {
+                transform: rotate(90deg) scale(1.05);
+                border-color: var(--accent-primary);
+                box-shadow: 0 0 15px rgba(59, 130, 246, 0.4);
+            }
+
+            .menu-dots-btn .dot {
+                width: 4px;
+                height: 4px;
+                background-color: var(--text-primary);
+                border-radius: 50%;
+                transition: transform 0.3s, opacity 0.3s, background-color 0.3s;
+            }
+
+            .menu-dots-btn.active .dot {
+                background-color: var(--accent-primary);
             }
 
             .theme-toggle-container {
                 margin: 0;
-                order: -1;
+                order: unset;
                 justify-content: flex-end;
             }
 
             .nav-links {
-                justify-content: center;
-                gap: 0.15rem;
+                position: absolute;
+                top: calc(100% + 10px);
+                left: 0;
+                width: 100%;
+                flex-direction: column;
+                background: var(--glass-bg-strong);
+                backdrop-filter: blur(30px) saturate(180%);
+                -webkit-backdrop-filter: blur(30px) saturate(180%);
+                border: 1px solid var(--glass-border);
+                border-radius: 20px;
+                box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2);
+                padding: 0.75rem;
+                gap: 0.4rem;
+                display: flex;
+                
+                /* Animations for show/hide */
+                opacity: 0;
+                transform: translateY(-10px) scale(0.95);
+                pointer-events: none;
+                transition: opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+                            transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            }
+
+            .nav-links.show {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+                pointer-events: auto;
             }
 
             .nav-link {
-                font-size: 0.78rem;
-                padding: 0.35rem 0.6rem;
+                font-size: 0.92rem;
+                padding: 0.65rem 1rem;
+                width: 100%;
+                justify-content: flex-start;
+                border-radius: 12px;
             }
 
             .nav-link svg {
-                width: 15px;
-                height: 15px;
+                width: 18px;
+                height: 18px;
             }
 
             .name {
@@ -2145,6 +2220,22 @@
 
             .section-title {
                 font-size: 1.7rem;
+            }
+
+            /* Hide large cluttering elements on mobile */
+            .floating-component.glove-special {
+                display: none;
+            }
+            /* Hide some normal ones to reduce density */
+            .floating-component:nth-child(even) {
+                display: none;
+            }
+            /* Scale down remaining floating components */
+            .floating-component {
+                max-width: 50px !important;
+                max-height: 50px !important;
+                width: auto !important;
+                height: auto !important;
             }
         }
 
@@ -2207,11 +2298,19 @@
 
 <body>
     <canvas id="starCanvas"></canvas>
+    <canvas id="tickCanvas"
+        style="position:fixed; top:0; left:0; width:100%; height:100%; z-index:-8; pointer-events:none;"></canvas>
     <div id="floatingComponents"></div>
 
     <nav class="navbar">
         <div class="nav-container">
-            <div class="nav-links">
+            <!-- Three dots button for mobile menu -->
+            <button class="menu-dots-btn" id="menuDotsBtn" aria-label="Toggle navigation">
+                <span class="dot"></span>
+                <span class="dot"></span>
+                <span class="dot"></span>
+            </button>
+            <div class="nav-links" id="navLinks">
                 <a href="#home" class="nav-link">
                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
                         stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -3013,6 +3112,180 @@
             window.updateStarField = function (theme) { initStars(theme === 'dark'); };
         }
 
+        function initTickField() {
+            const canvas = document.getElementById('tickCanvas');
+            const ctx = canvas.getContext('2d');
+
+            // --- EASY CONFIGURATION ---
+            // You can easily change the symbols or color opacity here
+            window.tickConfig = {
+                symbols: ['+', '*', '/', '-', '|', ';', '<'], // The characters to randomly pick from
+                colorLight: 'rgba(0, 0, 0, 0)',     // Color in light mode
+                colorDark: 'rgba(255, 255, 255, 0)',  // Color in dark mode
+                activeColorLight: 'rgba(59, 130, 246, 1)', // Highlight color near mouse
+                activeColorDark: 'rgba(0, 255, 255, 0.8)',
+                fontSize: 10,         // Size of the symbol
+                spacing: 35,          // Distance between symbols
+                mouseRadius: 50,     // How far the mouse affects the grid
+                scaleForce: 1.4       // How much they scale up near the mouse
+            };
+
+            let ticks = [];
+            let mouse = { x: -1000, y: -1000 };
+
+            function resizeCanvas() {
+                canvas.width = window.innerWidth;
+                canvas.height = window.innerHeight;
+                initGrid();
+            }
+
+            function initGrid() {
+                ticks = [];
+                const cols = Math.ceil(canvas.width / window.tickConfig.spacing) + 1;
+                const rows = Math.ceil(canvas.height / window.tickConfig.spacing) + 1;
+                const symbols = window.tickConfig.symbols;
+
+                for (let i = 0; i < cols; i++) {
+                    for (let j = 0; j < rows; j++) {
+                        const randomSymbol = symbols[Math.floor(Math.random() * symbols.length)];
+                        ticks.push({
+                            baseX: i * window.tickConfig.spacing,
+                            baseY: j * window.tickConfig.spacing,
+                            symbol: randomSymbol,
+                            angle: 0,
+                            scale: 1,
+                            active: 0
+                        });
+                    }
+                }
+            }
+
+            window.addEventListener('resize', resizeCanvas);
+
+            window.addEventListener('mousemove', (e) => {
+                mouse.x = e.clientX;
+                mouse.y = e.clientY;
+            });
+
+            window.addEventListener('touchmove', (e) => {
+                if (e.touches.length > 0) {
+                    mouse.x = e.touches[0].clientX;
+                    mouse.y = e.touches[0].clientY;
+                }
+            }, { passive: true });
+
+            window.addEventListener('mouseout', () => {
+                mouse.x = -1000;
+                mouse.y = -1000;
+            });
+
+            resizeCanvas();
+
+            function lerp(start, end, amt) {
+                return (1 - amt) * start + amt * end;
+            }
+
+            // A helper to lerp angles correctly (shortest path)
+            function lerpAngle(a, b, t) {
+                let diff = b - a;
+                while (diff < -Math.PI) diff += Math.PI * 2;
+                while (diff > Math.PI) diff -= Math.PI * 2;
+                return a + diff * t;
+            }
+
+            function animate() {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+                const isDark = document.documentElement.classList.contains('dark');
+                const baseColor = isDark ? window.tickConfig.colorDark : window.tickConfig.colorLight;
+                const activeColor = isDark ? window.tickConfig.activeColorDark : window.tickConfig.activeColorLight;
+
+                ctx.font = `${window.tickConfig.fontSize}px "SF Mono", "JetBrains Mono", monospace`;
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'middle';
+
+                ticks.forEach(tick => {
+                    const dx = mouse.x - tick.baseX;
+                    const dy = mouse.y - tick.baseY;
+                    const dist = Math.sqrt(dx * dx + dy * dy);
+
+                    let targetScale = 1;
+                    let targetAngle = 0; // Default angle
+                    let targetActive = 0;
+
+                    if (dist < window.tickConfig.mouseRadius) {
+                        // Point towards mouse
+                        targetAngle = Math.atan2(dy, dx);
+                        // Make symbol point appropriately based on its shape
+                        if (tick.symbol === '|' || tick.symbol === '+') {
+                            targetAngle += Math.PI / 2;
+                        }
+
+                        const force = (window.tickConfig.mouseRadius - dist) / window.tickConfig.mouseRadius;
+                        // Ease out the force for smoother scaling
+                        const smoothForce = force * force * (3 - 2 * force);
+                        targetScale = 1 + (smoothForce * (window.tickConfig.scaleForce - 1));
+                        targetActive = smoothForce;
+                    }
+
+                    // Lerp properties for smooth liquid effect
+                    tick.angle = lerpAngle(tick.angle, targetAngle, 0.12);
+                    tick.scale = lerp(tick.scale, targetScale, 0.15);
+                    tick.active = lerp(tick.active, targetActive, 0.15);
+
+                    ctx.save();
+                    ctx.translate(tick.baseX, tick.baseY);
+                    ctx.rotate(tick.angle);
+                    ctx.scale(tick.scale, tick.scale);
+
+                    if (tick.active > 0.05) {
+                        ctx.fillStyle = activeColor;
+                        ctx.globalAlpha = Math.min(1, tick.active * 1.5 + 0.2);
+                    } else {
+                        ctx.fillStyle = baseColor;
+                        ctx.globalAlpha = 1;
+                    }
+
+                    ctx.fillText(tick.symbol, 0, 0);
+                    ctx.restore();
+                });
+
+                requestAnimationFrame(animate);
+            }
+
+            animate();
+        }
+
+        function initMobileMenu() {
+            const menuBtn = document.getElementById('menuDotsBtn');
+            const navLinks = document.getElementById('navLinks');
+            const links = navLinks ? navLinks.querySelectorAll('.nav-link') : [];
+
+            if (menuBtn && navLinks) {
+                menuBtn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    navLinks.classList.toggle('show');
+                    menuBtn.classList.toggle('active');
+                });
+
+                // Close menu when clicking outside
+                document.addEventListener('click', (e) => {
+                    if (!navLinks.contains(e.target) && e.target !== menuBtn && !menuBtn.contains(e.target)) {
+                        navLinks.classList.remove('show');
+                        menuBtn.classList.remove('active');
+                    }
+                });
+
+                // Close menu when clicking a link
+                links.forEach(link => {
+                    link.addEventListener('click', () => {
+                        navLinks.classList.remove('show');
+                        menuBtn.classList.remove('active');
+                    });
+                });
+            }
+        }
+
         function initBackToTop() {
             const backToTopButton = document.getElementById('backToTop');
             window.addEventListener('scroll', () => {
@@ -3335,8 +3608,10 @@
 
             initThemeToggle();
             initStarField();
+            initTickField();
             initBackToTop();
             initScrollSpy();
+            initMobileMenu();
             createFloatingComponents();
             animateFloatingComponents();
             initFloatingClickDetection();
