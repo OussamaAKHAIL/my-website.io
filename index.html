@@ -1107,10 +1107,15 @@
         .right-arrow {
             right: -22px;
         }
-        
+
         @media (max-width: 768px) {
-            .left-arrow { left: 5px; }
-            .right-arrow { right: 5px; }
+            .left-arrow {
+                left: 5px;
+            }
+
+            .right-arrow {
+                right: 5px;
+            }
         }
 
         /* ============================================
@@ -2635,6 +2640,20 @@
             {
                 logo: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/orange-BDb5113mOo7jH9YElrLB2Vz0PtzOe1.png",
                 company: "Orange Digital Center",
+                role: "VTOL v-1604",
+                date: "Jul 2025 - Aug 2025",
+                descriptionHTML: `<ul><li>end-to-end development of a custom VTOL aircraft V-1604, built entirely from scratch.</li><li>still under development</li></ul>`
+            },
+            {
+                logo: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/robo-aDk3yXczoT7Q4DxeCY3XIkcceXhKHo.png",
+                company: "RoboTech FSTT",
+                role: "president",
+                date: "Oct 2025 - Present",
+                descriptionHTML: `<ul><li>Worked on technical projects related to robotics and automation.</li><li>Developed solutions involving embedded systems and electronics.</li></ul>`
+            },
+            {
+                logo: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/orange-BDb5113mOo7jH9YElrLB2Vz0PtzOe1.png",
+                company: "Orange Digital Center",
                 role: "Autoguided Telescope Project",
                 date: "Jul 2024 - Aug 2024",
                 descriptionHTML: `<ul><li>Developed an autoguided Dobsonian telescope from scratch with celestial tracking capabilities</li><li>Implemented three operating modes:<ul><li><strong>Online Mode</strong></li><li><strong>Catalog Mode</strong></li><li><strong>Manual Mode</strong></li></ul></li></ul>`
@@ -2684,6 +2703,40 @@
         ];
 
         const projectsData = [
+            {
+                image: "https://raw.githubusercontent.com/OussamaAKHAIL/EchoStrike/main/media/logo-V2.jpeg",
+                title: "EchoStrike",
+                subtitle: "Acoustic Side-Channel Analysis",
+                date: "2026",
+                link: "https://github.com/OussamaAKHAIL/EchoStrike",
+                linkText: "View source code on GitHub",
+                descriptionHTML: `
+        <p>Developed an end-to-end MATLAB pipeline that analyzes keyboard typing sounds to identify pressed keys using digital signal processing and machine learning.</p>
+
+        <ul>
+            <li><strong>Audio Processing:</strong> Automated segmentation of raw typing recordings into individual keystrokes.</li>
+
+            <li><strong>Feature Extraction:</strong> Applied FFT analysis, normalization, and data augmentation to prepare AI-ready datasets.</li>
+
+            <li><strong>Machine Learning:</strong> Trained a multi-class SVM capable of classifying all 104 keyboard keys.</li>
+
+            <li><strong>Interactive Visualization:</strong> Created a graphical keyboard heatmap to display prediction confidence.</li>
+
+            <li><strong>Performance:</strong> Achieved approximately 71% accuracy using only raw acoustic data.</li>
+
+            <li><strong>Focus:</strong> Demonstrates signal processing, machine learning, and cybersecurity research through acoustic side-channel analysis.</li>
+        </ul>
+    `
+            },
+            {
+                image: "https://raw.githubusercontent.com/OussamaAKHAIL/Yagi_145.8MHz/main/porto/ChatGPT Image Jul 7, 2026, 01_51_14 AM.png", // Replace with an actual image URL of your Cross-Yagi or CAD model
+                title: "Automated Amateur Ground Station for ISS Communication",
+                subtitle: "Faculté des Sciences et Techniques de Tanger",
+                date: "5/2026 - 6/2026",
+                link: "https://github.com/OussamaAKHAIL/Yagi_145.8MHz", // Replace with your project link or GitHub repository if available
+                linkText: "View project details",
+                descriptionHTML: `<p>Designed and developed an automated amateur ground station to receive VHF radio signals (145.800 MHz) from the International Space Station (ISS). The project encompasses theoretical study, 3D CAD modeling, and the integration of hardware and software systems:</p><ul><li><strong>Antenna Conception:</strong> Designed and optimized a 6-element Cross-Yagi antenna using MMANA-GAL software, featuring right-hand circular polarization (RHCP) and impedance matching via a parallel short-circuited stub.</li><li><strong>Signal Reception:</strong> Built a complete NBFM reception chain using an RTL-SDR receiver and a Low-Noise Amplifier (LNA), utilizing Gpredict software for real-time Doppler shift correction (±3.7 kHz).</li><li><strong>Automated Tracking:</strong> Integrated a motorized mount controlled by an Arduino, interfacing directly with the Stellarium API for precise real-time azimuth and elevation tracking during ISS passes.</li></ul>`
+            },
             {
                 image: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/telescopel.jpg-fkNyTsDyB4yO0l9YffFPuo7eurUzaZ.jpeg",
                 title: "Autoguided Dobsonian Telescope Project",
